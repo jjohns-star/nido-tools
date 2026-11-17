@@ -674,11 +674,6 @@
       margin-top: 1px;
     }
 
-    /* Master Grid Row Height */
-    .master-lane {
-      height: 54px;
-    }
-
     /* Compact Matching Windows Summary List */
     .matches-summary {
       margin-top: 14px;
@@ -936,7 +931,6 @@
       <nav class="mode-switcher" aria-label="View mode">
         <button type="button" class="mode-btn active" data-mode="block">By Instructional Block</button>
         <button type="button" class="mode-btn" data-mode="daytime">By Day &amp; Time</button>
-        <button type="button" class="mode-btn" data-mode="grid">Master Grid</button>
       </nav>
     </div>
   </header>
@@ -1398,7 +1392,7 @@
        3. APPLICATION STATE
        ======================================================================== */
     const state = {
-      mode: 'block', // 'block' | 'daytime' | 'grid'
+      mode: 'block', // 'block' | 'daytime'
 
       // Mode 1: By Instructional Block
       selectedGrade: 4,
@@ -1410,11 +1404,7 @@
       // Mode 2: By Day & Time
       dtDay: 'Wednesday',
       dtStartText: '10:25 AM',
-      dtEndText: '11:30 AM',
-
-      // Mode 3: Master Grid
-      gridDay: 'Wednesday',
-      gridHighlight: 'all' // 'all' | 'No Students' | 'With Students'
+      dtEndText: '11:30 AM'
     };
 
     /* ========================================================================
@@ -1856,7 +1846,7 @@
           </div>
 
           <div class="timeline-subheader">
-            <span class="timeline-caption">SCHEDULE COMPARISON </span>
+            <span class="timeline-caption">SCHEDULE COMPARISON (7:30 AM – 2:45 PM)</span>
             <div class="legend-list">
               <span class="legend-item"><span class="legend-swatch" style="background: var(--navy-primary);"></span>Target Block</span>
               <span class="legend-item"><span class="legend-swatch" style="background: var(--green-no-students);"></span>No Students</span>
@@ -2123,132 +2113,14 @@
     }
 
     /* ========================================================================
-       7. MODE 3: MASTER GRID RENDERER (HORIZONTAL DAILY TIMELINE)
-       ======================================================================== */
-    function renderMasterGridMode() {
-      const highlightOptions = [
-        { id: 'all', label: 'All Blocks' },
-        { id: 'No Students', label: 'No Students' },
-        { id: 'With Students', label: 'With Students' }
-      ];
-
-      const filterCardHtml = `
-        <section class="card" aria-label="Master grid controls">
-          <div class="filter-grid">
-            <div class="filter-section">
-              <div class="section-label">1. DAY OF THE WEEK</div>
-              <div class="pill-row">
-                ${DAYS.map(
-                  (day) => `
-                    <button
-                      type="button"
-                      class="pill ${state.gridDay === day ? 'active' : ''}"
-                      data-action="grid-select-day"
-                      data-day="${day}"
-                    >
-                      ${day}
-                    </button>
-                  `
-                ).join('')}
-              </div>
-            </div>
-
-            <div class="filter-section">
-              <div class="section-label">2. HIGHLIGHT FILTER</div>
-              <div class="pill-row">
-                ${highlightOptions
-                  .map(
-                    (opt) => `
-                      <button
-                        type="button"
-                        class="pill ${state.gridHighlight === opt.id ? 'active' : ''}"
-                        data-action="grid-select-highlight"
-                        data-highlight="${escapeHtml(opt.id)}"
-                      >
-                        ${escapeHtml(opt.label)}
-                      </button>
-                    `
-                  )
-                  .join('')}
-              </div>
-            </div>
-          </div>
-        </section>
-      `;
-
-      const gradeRowsHtml = GRADES.map((g) => {
-        const gradeBlocks = ENRICHED_SCHEDULE.filter((item) => item.g === g && item.d === state.gridDay);
-        const blocksHtml = gradeBlocks
-          .map((blk) => {
-            let visualClass = 'is-other';
-            if (state.gridHighlight === 'all') {
-              visualClass =
-                blk.t === 'No Students' ? 'is-match-no-students' : 'is-match-with-students';
-            } else if (state.gridHighlight === 'No Students') {
-              visualClass = blk.t === 'No Students' ? 'is-match-no-students' : 'is-other';
-            } else if (state.gridHighlight === 'With Students') {
-              visualClass = blk.t === 'With Students' ? 'is-match-with-students' : 'is-other';
-            }
-
-            return renderBlockSegment(blk, { visualClass });
-          })
-          .join('');
-
-        return `
-          <div class="grade-row">
-            <div class="grade-label">Grade ${g}</div>
-            <div class="track-lane master-lane">
-              ${renderGridLines()}
-              ${blocksHtml}
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      const gridCardHtml = `
-        <article class="card">
-          <div class="result-card-header">
-            <h2 class="result-title">${escapeHtml(state.gridDay)} — Master ES Schedule (Grades 1–5)</h2>
-            <div class="legend-list">
-              <span class="legend-item"><span class="legend-swatch" style="background: var(--green-no-students);"></span>No Students</span>
-              <span class="legend-item"><span class="legend-swatch" style="background: var(--slate-with-students);"></span>With Students</span>
-              ${
-                state.gridHighlight !== 'all'
-                  ? `<span class="legend-item"><span class="legend-swatch" style="background: var(--other-block);"></span>Other Block</span>`
-                  : ''
-              }
-            </div>
-          </div>
-
-          <div class="timeline-subheader">
-            <span class="timeline-caption">DAILY TIMELINE (7:30 AM – 2:45 PM)</span>
-          </div>
-
-          <div class="timeline-scroll">
-            <div class="timeline-board">
-              ${renderTimelineAxis()}
-              <div class="timeline-rows-wrap">
-                ${gradeRowsHtml}
-              </div>
-            </div>
-          </div>
-        </article>
-      `;
-
-      return `${filterCardHtml}${gridCardHtml}`;
-    }
-
-    /* ========================================================================
-       8. RENDER ORCHESTRATION & EVENT HANDLING
+       7. RENDER ORCHESTRATION & EVENT HANDLING
        ======================================================================== */
     function renderApp() {
       const root = document.getElementById('appRoot');
       if (state.mode === 'block') {
         root.innerHTML = renderBlockMode();
-      } else if (state.mode === 'daytime') {
-        root.innerHTML = renderDayTimeMode();
       } else {
-        root.innerHTML = renderMasterGridMode();
+        root.innerHTML = renderDayTimeMode();
       }
     }
 
@@ -2347,17 +2219,6 @@
           break;
         }
 
-        // Mode 3 actions
-        case 'grid-select-day': {
-          state.gridDay = target.getAttribute('data-day');
-          renderApp();
-          break;
-        }
-        case 'grid-select-highlight': {
-          state.gridHighlight = target.getAttribute('data-highlight');
-          renderApp();
-          break;
-        }
       }
     });
 
