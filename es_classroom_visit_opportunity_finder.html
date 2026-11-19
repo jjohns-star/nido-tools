@@ -2527,6 +2527,7 @@
     });
 
     // Live manual time inputs for Mode 2 (preserving input cursor focus)
+    // Automatically populates End Time 1 hour after valid Start Time (capped at 2:45 PM)
     document.getElementById('appRoot').addEventListener('input', (e) => {
       const target = e.target;
       if (!target || !target.getAttribute) return;
@@ -2535,6 +2536,11 @@
         const cursorPos = target.selectionStart;
         if (action === 'dt-start-input') {
           state.dtStartText = target.value;
+          const parsedStart = parseFlexibleTime(target.value);
+          if (parsedStart !== null && parsedStart >= DAY_START_MIN && parsedStart < DAY_END_MIN) {
+            const autoEndMin = Math.min(parsedStart + 60, DAY_END_MIN);
+            state.dtEndText = formatMinutes(autoEndMin);
+          }
         } else {
           state.dtEndText = target.value;
         }
