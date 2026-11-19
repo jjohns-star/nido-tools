@@ -994,8 +994,8 @@
       </div>
 
       <nav class="mode-switcher" aria-label="View mode">
-        <button type="button" class="mode-btn active" data-mode="block">By Instructional Block</button>
-        <button type="button" class="mode-btn" data-mode="daytime">By Day &amp; Time</button>
+        <button type="button" class="mode-btn" data-mode="block">By Instructional Block</button>
+        <button type="button" class="mode-btn active" data-mode="daytime">By Day &amp; Time</button>
         <button type="button" class="mode-btn" data-mode="grid">Master Grid</button>
       </nav>
     </div>
@@ -1476,7 +1476,7 @@
     const INITIAL_DEFAULTS = getInitialClockDefaults();
 
     const state = {
-      mode: 'block', // 'block' | 'daytime' | 'grid'
+      mode: 'daytime', // 'block' | 'daytime' | 'grid'
 
       // Mode 1: By Instructional Block
       selectedGrade: 1,
