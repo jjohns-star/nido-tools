@@ -1448,25 +1448,50 @@
     });
 
     /* ========================================================================
-       3. APPLICATION STATE
+       3. APPLICATION STATE & LOCAL CLOCK DEFAULTS
        ======================================================================== */
+    /**
+     * Computes initial day and 1-hour time window defaults from the browser's
+     * local clock, falling back cleanly outside school hours or on weekends.
+     */
+    function getInitialClockDefaults() {
+      const now = new Date();
+      const dayIndex = now.getDay(); // 0 = Sun, 1 = Mon ... 5 = Fri, 6 = Sat
+      const isWeekday = dayIndex >= 1 && dayIndex <= 5;
+      const defaultDay = isWeekday ? DAYS[dayIndex - 1] : 'Monday';
+
+      const currentMin = now.getHours() * 60 + now.getMinutes();
+      const isSchoolHours = isWeekday && currentMin >= DAY_START_MIN && currentMin < DAY_END_MIN;
+
+      const startMin = isSchoolHours ? currentMin : 480; // Fallback: 8:00 AM
+      const endMin = isSchoolHours ? Math.min(currentMin + 60, DAY_END_MIN) : 540; // Fallback: 9:00 AM (1 hr)
+
+      return {
+        defaultDay,
+        dtStartText: formatMinutes(startMin),
+        dtEndText: formatMinutes(endMin)
+      };
+    }
+
+    const INITIAL_DEFAULTS = getInitialClockDefaults();
+
     const state = {
       mode: 'block', // 'block' | 'daytime' | 'grid'
 
       // Mode 1: By Instructional Block
-      selectedGrade: 4,
-      targetBlock: 'Math',
+      selectedGrade: 1,
+      targetBlock: 'ELA',
       selectedDays: new Set(DAYS),
       compareAgainst: new Set(['Break', 'Specials', 'Spanish', 'Recess', 'Lunch']),
       minOverlap: 15,
 
       // Mode 2: By Day & Time
-      dtDay: 'Wednesday',
-      dtStartText: '10:25 AM',
-      dtEndText: '11:30 AM',
+      dtDay: INITIAL_DEFAULTS.defaultDay,
+      dtStartText: INITIAL_DEFAULTS.dtStartText,
+      dtEndText: INITIAL_DEFAULTS.dtEndText,
 
       // Mode 3: Master Grid
-      gridDay: 'All', // 'All' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday'
+      gridDay: INITIAL_DEFAULTS.defaultDay, // 'All' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday'
       gridHighlight: 'all' // 'all' | 'no-students' | 'with-students' | 'meetings'
     };
 
@@ -2346,7 +2371,7 @@
               </div>
 
               <div class="timeline-subheader">
-                <span class="timeline-caption">FULL SCHOOL DAY TIMELINE </span>
+                <span class="timeline-caption">FULL SCHOOL DAY TIMELINE (7:30 AM – 2:45 PM)</span>
                 <div class="legend-list">
                   <span class="legend-item"><span class="legend-swatch" style="background: var(--green-no-students);"></span>No Students</span>
                   <span class="legend-item"><span class="legend-swatch" style="background: var(--slate-with-students);"></span>With Students</span>
