@@ -713,6 +713,7 @@
     .match-chip {
       display: inline-flex;
       align-items: center;
+      flex-wrap: wrap;
       gap: 7px;
       padding: 5px 11px;
       border-radius: 8px;
@@ -721,6 +722,21 @@
       background-color: var(--pill-bg);
       border: 1px solid var(--border-hairline);
       color: var(--navy-primary);
+    }
+
+    .match-chip.has-meeting {
+      border-color: var(--meeting-border);
+    }
+
+    .match-chip-meeting {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--meeting-subtext);
+      background-color: var(--meeting-bg);
+      border: 1px solid var(--meeting-border);
+      border-radius: 5px;
+      padding: 1px 7px;
+      line-height: 1.25;
     }
 
     .match-chip-dot {
@@ -1849,7 +1865,7 @@
       });
 
       const availCount = availableGradesSet.size;
-      const headerTitle = `${occ.d} — Grade ${occ.g} · ${occ.b} · ${formatMinutes(targetStart)}–${formatMinutes(targetEnd)} (${occ.duration} min)`;
+      const headerTitle = `${occ.d} — Grade ${occ.g} · ${occ.b}${occ.m ? ` (${occ.m})` : ''} · ${formatMinutes(targetStart)}–${formatMinutes(targetEnd)} (${occ.duration} min)`;
 
       // Build plain-text summary for Copy Summary button
       const summaryLines = [
@@ -1858,7 +1874,7 @@
         ...(matchingWindows.length
           ? matchingWindows.map(
               (m) =>
-                `• Grade ${m.grade}: ${m.block.b} (${m.block.t}) — ${formatMinutes(m.overlap.start)}–${formatMinutes(m.overlap.end)} (${m.overlap.mins} min overlap)`
+                `• Grade ${m.grade}: ${m.block.b}${m.block.m ? ` — ${m.block.m}` : ''} (${m.block.t}) — ${formatMinutes(m.overlap.start)}–${formatMinutes(m.overlap.end)} (${m.overlap.mins} min overlap)`
             )
           : ['• No matching overlapping windows for current filter settings.'])
       ];
@@ -1922,9 +1938,10 @@
             .map((m) => {
               const dotColor = m.block.t === 'No Students' ? 'var(--green-no-students)' : 'var(--slate-with-students)';
               return `
-                <div class="match-chip">
+                <div class="match-chip${m.block.m ? ' has-meeting' : ''}">
                   <span class="match-chip-dot" style="background-color: ${dotColor};"></span>
                   <span>Grade ${m.grade} · ${escapeHtml(m.block.b)}</span>
+                  ${m.block.m ? `<span class="match-chip-meeting">${escapeHtml(m.block.m)}</span>` : ''}
                   <span class="match-chip-meta">${formatMinutes(m.overlap.start)}–${formatMinutes(m.overlap.end)} (${m.overlap.mins} min)</span>
                 </div>
               `;
