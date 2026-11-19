@@ -1453,14 +1453,21 @@
     /**
      * Computes initial day and 1-hour time window defaults from the browser's
      * local clock, falling back cleanly outside school hours or on weekends.
+     * At or after 2:45 PM on a weekday, defaults to 8:00 AM–9:00 AM the next school day.
      */
     function getInitialClockDefaults() {
       const now = new Date();
       const dayIndex = now.getDay(); // 0 = Sun, 1 = Mon ... 5 = Fri, 6 = Sat
       const isWeekday = dayIndex >= 1 && dayIndex <= 5;
-      const defaultDay = isWeekday ? DAYS[dayIndex - 1] : 'Monday';
-
       const currentMin = now.getHours() * 60 + now.getMinutes();
+      const isAfterSchool = isWeekday && currentMin >= DAY_END_MIN;
+
+      const defaultDay = !isWeekday
+        ? 'Monday'
+        : isAfterSchool
+          ? DAYS[dayIndex % 5]
+          : DAYS[dayIndex - 1];
+
       const isSchoolHours = isWeekday && currentMin >= DAY_START_MIN && currentMin < DAY_END_MIN;
 
       const startMin = isSchoolHours ? currentMin : 480; // Fallback: 8:00 AM
