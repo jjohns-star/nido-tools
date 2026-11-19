@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ES Classroom Visit Opportunity Finder — International School Nido de Aguilas </title>
+  <title>ES Classroom Visit Opportunity Finder — International School Nido de Aguilas</title>
   <!-- Load Google Font Raleway (weights 600, 700, 800) for headings -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600;700;800&display=swap" rel="stylesheet" />
   <style>
     /* ==========================================================================
-       DESIGN TOKENS & VERSION 1 PALETTE
+       DESIGN TOKENS & PALETTE
        ========================================================================== */
     :root {
       --font-head: 'Raleway', sans-serif;
@@ -29,6 +29,12 @@
       --green-no-students: #006f4f;
       --slate-with-students: #205176;
       --other-block: #f2ede4;
+
+      /* Pale yellow tokens for Grade-Level Team Meetings */
+      --team-meeting-bg: #fef3c7;
+      --team-meeting-border: #e6c656;
+      --team-meeting-text: #4a3505;
+      --team-meeting-pill-bg: #fef7d6;
 
       --text-main: #202a3c;
       --text-muted: #5d6574;
@@ -80,7 +86,7 @@
     }
 
     .brand-logo {
-      height: 56px;
+      height: 52px;
       width: auto;
       display: block;
       flex-shrink: 0;
@@ -487,7 +493,7 @@
       width: 12px;
       height: 12px;
       border-radius: 4px;
-      border: 1px solid rgba(32, 42, 60, 0.12);
+      border: 1px solid rgba(32, 42, 60, 0.14);
       flex-shrink: 0;
     }
 
@@ -648,6 +654,17 @@
       border-color: var(--slate-with-students);
     }
 
+    /* Pale yellow styling for Team Meeting: Nuts & Bolts and Collaborative Planning */
+    .sched-block.is-team-meeting {
+      background-color: var(--team-meeting-bg);
+      color: var(--team-meeting-text);
+      border-color: var(--team-meeting-border);
+    }
+
+    .sched-block.is-team-meeting.is-matched-meeting {
+      box-shadow: inset 0 0 0 1px rgba(180, 120, 12, 0.35);
+    }
+
     .sched-block.is-other {
       background-color: var(--other-block);
       color: #4f5765;
@@ -664,19 +681,14 @@
     }
 
     .block-time {
-      font-size: 0.64rem;
-      font-weight: 500;
+      font-size: 0.63rem;
+      font-weight: 600;
       opacity: 0.88;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       line-height: 1.1;
       margin-top: 1px;
-    }
-
-    /* Master Grid Row Height */
-    .master-lane {
-      height: 54px;
     }
 
     /* Compact Matching Windows Summary List */
@@ -701,6 +713,11 @@
       background-color: var(--pill-bg);
       border: 1px solid var(--border-hairline);
       color: var(--navy-primary);
+    }
+
+    .match-chip.is-meeting-chip {
+      background-color: var(--team-meeting-pill-bg);
+      border-color: var(--team-meeting-border);
     }
 
     .match-chip-dot {
@@ -790,6 +807,19 @@
       line-height: 1.25;
     }
 
+    .dt-meeting-tag {
+      display: inline-block;
+      align-self: flex-start;
+      margin-top: 2px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background-color: var(--team-meeting-bg);
+      color: var(--team-meeting-text);
+      border: 1px solid var(--team-meeting-border);
+    }
+
     .dt-block-meta {
       font-size: 0.8rem;
       font-weight: 500;
@@ -842,7 +872,7 @@
       font-size: 0.8rem;
       line-height: 1.4;
       box-shadow: 0 8px 22px rgba(32, 42, 60, 0.25);
-      max-width: 280px;
+      max-width: 290px;
       opacity: 0;
       transition: opacity 0.1s ease;
     }
@@ -901,7 +931,7 @@
         padding: 12px 16px;
       }
       .brand-logo {
-        height: 46px;
+        height: 44px;
       }
       .brand-text h1 {
         font-size: 1.12rem;
@@ -917,26 +947,26 @@
 </head>
 <body>
   <!-- ========================================================================
-       HEADER WITH EXACT NIDO DE AGUILAS LOGO & MODE SWITCHER
+       HEADER WITH NIDO DE AGUILAS CREST & MODE SWITCHER
        ======================================================================== -->
   <header class="app-header">
     <div class="header-inner">
       <div class="brand-lockup">
-        <img
-          class="brand-logo"
-          alt="International School Nido de Aguilas"
-          src="data:image/png;base64,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"
-        />
+        <img class="brand-logo" src="data:image/png;base64,..." /> viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="International School Nido de Aguilas">
+          <path d="M8 8H56V33C56 46.5 45.2 55.2 32 59C18.8 55.2 8 46.5 8 33V8Z" fill="#202a3c"/>
+          <path d="M12 12H52V32.5C52 43.8 42.9 51.2 32 54.6C21.1 51.2 12 43.8 12 32.5V12Z" stroke="#e6c656" stroke-width="2"/>
+          <path d="M18 39L27 25L33 33L39 23L46 39H18Z" fill="#ffffff"/>
+          <circle cx="32" cy="18.5" r="3" fill="#e6c656"/>
+        </svg>
         <div class="brand-text">
-          <h1>ES Classroom Visit Opportunities </h1>
+          <h1>ES Classroom Visit Opportunity Finder</h1>
           <p>International School Nido de Aguilas</p>
         </div>
       </div>
 
       <nav class="mode-switcher" aria-label="View mode">
         <button type="button" class="mode-btn active" data-mode="block">By Instructional Block</button>
-        <button type="button" class="mode-btn" data-mode="daytime">By Day &amp; Time</button>
-        <button type="button" class="mode-btn" data-mode="grid">Master Grid</button>
+        <button type="button" class="mode-btn" data-mode="daytime">By Day & Time</button>
       </nav>
     </div>
   </header>
@@ -954,9 +984,10 @@
 
   <script>
     /* ========================================================================
-       1. VERIFIED 2026–2027 ES MASTER SCHEDULE DATA (ALL 296 BLOCKS)
+       1. VERIFIED 2026–2027 ES MASTER SCHEDULE DATA (WITH GRADE TEAM MEETINGS)
        ======================================================================== */
     const SCHEDULE_DATA = [
+      // GRADE 1
       {"g":1,"d":"Monday","s":"7:40","e":"8:00","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
       {"g":1,"d":"Monday","s":"8:00","e":"9:00","b":"Math","r":"Math","t":"With Students"},
       {"g":1,"d":"Monday","s":"9:00","e":"9:30","b":"WINN","r":"WINN","t":"With Students"},
@@ -969,6 +1000,7 @@
       {"g":1,"d":"Monday","s":"1:10","e":"1:55","b":"Specials","r":"Specials (prep)","t":"No Students"},
       {"g":1,"d":"Monday","s":"2:00","e":"2:30","b":"ELA","r":"ELA","t":"With Students"},
       {"g":1,"d":"Monday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
+
       {"g":1,"d":"Tuesday","s":"7:40","e":"7:50","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
       {"g":1,"d":"Tuesday","s":"7:55","e":"8:40","b":"Specials","r":"Specials (prep)","t":"No Students"},
       {"g":1,"d":"Tuesday","s":"8:45","e":"9:30","b":"Math","r":"Math","t":"With Students"},
@@ -981,30 +1013,33 @@
       {"g":1,"d":"Tuesday","s":"1:10","e":"1:50","b":"Math","r":"Math","t":"With Students"},
       {"g":1,"d":"Tuesday","s":"1:50","e":"2:30","b":"WINN","r":"WINN","t":"With Students"},
       {"g":1,"d":"Tuesday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
+
       {"g":1,"d":"Wednesday","s":"7:30","e":"7:40","b":"Arrival","r":"Arrival","t":"No Students"},
       {"g":1,"d":"Wednesday","s":"7:40","e":"8:00","b":"Spanish Morning Meeting","r":"Spanish Morning Meeting","t":"With Students"},
       {"g":1,"d":"Wednesday","s":"8:00","e":"8:45","b":"Spanish","r":"Spanish","t":"No Students"},
       {"g":1,"d":"Wednesday","s":"8:50","e":"9:30","b":"Changemakers","r":"Changemakers","t":"With Students"},
       {"g":1,"d":"Wednesday","s":"9:30","e":"9:55","b":"Break","r":"Break","t":"No Students"},
       {"g":1,"d":"Wednesday","s":"9:55","e":"10:40","b":"Math","r":"Math","t":"With Students"},
-      {"g":1,"d":"Wednesday","s":"10:45","e":"11:30","b":"Specials","r":"Specials (prep)","t":"No Students"},
+      {"g":1,"d":"Wednesday","s":"10:45","e":"11:30","b":"Specials","r":"Specials — Team Meeting: Nuts & Bolts","m":"Team Meeting: Nuts & Bolts","t":"No Students"},
       {"g":1,"d":"Wednesday","s":"11:30","e":"12:20","b":"WINN","r":"WINN","t":"With Students"},
       {"g":1,"d":"Wednesday","s":"12:20","e":"12:45","b":"Lunch","r":"Lunch","t":"No Students"},
       {"g":1,"d":"Wednesday","s":"12:45","e":"1:10","b":"Recess","r":"Recess","t":"No Students"},
       {"g":1,"d":"Wednesday","s":"1:10","e":"2:30","b":"ELA","r":"ELA","t":"With Students"},
       {"g":1,"d":"Wednesday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
+
       {"g":1,"d":"Thursday","s":"7:40","e":"8:00","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
       {"g":1,"d":"Thursday","s":"8:00","e":"8:45","b":"HR Time","r":"HR Time","t":"With Students"},
       {"g":1,"d":"Thursday","s":"8:45","e":"9:30","b":"ELA","r":"ELA","t":"With Students"},
       {"g":1,"d":"Thursday","s":"9:30","e":"9:55","b":"Break","r":"Break","t":"No Students"},
       {"g":1,"d":"Thursday","s":"9:55","e":"10:40","b":"Math","r":"Math","t":"With Students"},
-      {"g":1,"d":"Thursday","s":"10:45","e":"11:30","b":"Spanish","r":"Spanish","t":"No Students"},
-      {"g":1,"d":"Thursday","s":"11:35","e":"12:20","b":"Specials","r":"Specials (prep)","t":"No Students"},
+      {"g":1,"d":"Thursday","s":"10:45","e":"11:30","b":"Spanish","r":"Spanish — Collaborative Planning","m":"Collaborative Planning","t":"No Students"},
+      {"g":1,"d":"Thursday","s":"11:35","e":"12:20","b":"Specials","r":"Specials — Collaborative Planning","m":"Collaborative Planning","t":"No Students"},
       {"g":1,"d":"Thursday","s":"12:20","e":"12:45","b":"Lunch","r":"Lunch","t":"No Students"},
       {"g":1,"d":"Thursday","s":"12:45","e":"1:10","b":"Recess","r":"Recess","t":"No Students"},
       {"g":1,"d":"Thursday","s":"1:10","e":"1:50","b":"WINN","r":"WINN","t":"With Students"},
       {"g":1,"d":"Thursday","s":"1:50","e":"2:30","b":"Changemakers","r":"Changemakers","t":"With Students"},
       {"g":1,"d":"Thursday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
+
       {"g":1,"d":"Friday","s":"7:40","e":"8:00","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
       {"g":1,"d":"Friday","s":"8:00","e":"8:40","b":"ELA","r":"ELA","t":"With Students"},
       {"g":1,"d":"Friday","s":"8:45","e":"9:30","b":"Specials","r":"Specials (prep)","t":"No Students"},
@@ -1017,18 +1052,21 @@
       {"g":1,"d":"Friday","s":"1:10","e":"1:55","b":"Spanish","r":"Spanish","t":"No Students"},
       {"g":1,"d":"Friday","s":"2:00","e":"2:30","b":"Changemakers","r":"Changemakers","t":"With Students"},
       {"g":1,"d":"Friday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
+
+      // GRADE 2
       {"g":2,"d":"Monday","s":"7:40","e":"8:00","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
       {"g":2,"d":"Monday","s":"8:00","e":"8:40","b":"Math","r":"Math","t":"With Students"},
       {"g":2,"d":"Monday","s":"8:40","e":"9:30","b":"ELA","r":"ELA","t":"With Students"},
       {"g":2,"d":"Monday","s":"9:30","e":"9:50","b":"Break","r":"Break","t":"No Students"},
       {"g":2,"d":"Monday","s":"9:50","e":"10:40","b":"Changemakers","r":"Changemakers","t":"With Students"},
-      {"g":2,"d":"Monday","s":"10:45","e":"11:30","b":"Spanish","r":"Spanish","t":"No Students"},
-      {"g":2,"d":"Monday","s":"11:35","e":"12:20","b":"Specials","r":"Specials (prep)","t":"No Students"},
+      {"g":2,"d":"Monday","s":"10:45","e":"11:30","b":"Spanish","r":"Spanish — Collaborative Planning","m":"Collaborative Planning","t":"No Students"},
+      {"g":2,"d":"Monday","s":"11:35","e":"12:20","b":"Specials","r":"Specials — Collaborative Planning","m":"Collaborative Planning","t":"No Students"},
       {"g":2,"d":"Monday","s":"12:20","e":"12:45","b":"Recess","r":"Recess","t":"No Students"},
       {"g":2,"d":"Monday","s":"12:45","e":"1:10","b":"Lunch","r":"Lunch","t":"No Students"},
       {"g":2,"d":"Monday","s":"1:10","e":"1:50","b":"WINN","r":"WINN","t":"With Students"},
       {"g":2,"d":"Monday","s":"1:50","e":"2:30","b":"ELA","r":"ELA","t":"With Students"},
       {"g":2,"d":"Monday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
+
       {"g":2,"d":"Tuesday","s":"7:40","e":"8:00","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
       {"g":2,"d":"Tuesday","s":"8:00","e":"8:40","b":"ELA","r":"ELA","t":"With Students"},
       {"g":2,"d":"Tuesday","s":"8:45","e":"9:30","b":"Specials","r":"Specials (prep)","t":"No Students"},
@@ -1041,6 +1079,7 @@
       {"g":2,"d":"Tuesday","s":"1:10","e":"1:55","b":"Spanish","r":"Spanish","t":"No Students"},
       {"g":2,"d":"Tuesday","s":"2:00","e":"2:30","b":"Changemakers","r":"Changemakers","t":"With Students"},
       {"g":2,"d":"Tuesday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
+
       {"g":2,"d":"Wednesday","s":"7:40","e":"8:00","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
       {"g":2,"d":"Wednesday","s":"8:00","e":"9:00","b":"Math","r":"Math","t":"With Students"},
       {"g":2,"d":"Wednesday","s":"9:00","e":"9:30","b":"WINN","r":"WINN","t":"With Students"},
@@ -1053,6 +1092,7 @@
       {"g":2,"d":"Wednesday","s":"1:10","e":"1:55","b":"Specials","r":"Specials (prep)","t":"No Students"},
       {"g":2,"d":"Wednesday","s":"2:00","e":"2:30","b":"ELA","r":"ELA","t":"With Students"},
       {"g":2,"d":"Wednesday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
+
       {"g":2,"d":"Thursday","s":"7:40","e":"7:50","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
       {"g":2,"d":"Thursday","s":"7:55","e":"8:40","b":"Specials","r":"Specials (prep)","t":"No Students"},
       {"g":2,"d":"Thursday","s":"8:45","e":"9:30","b":"ELA","r":"ELA","t":"With Students"},
@@ -1065,41 +1105,46 @@
       {"g":2,"d":"Thursday","s":"1:10","e":"1:50","b":"Changemakers","r":"Changemakers","t":"With Students"},
       {"g":2,"d":"Thursday","s":"1:50","e":"2:30","b":"WINN","r":"WINN","t":"With Students"},
       {"g":2,"d":"Thursday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
+
       {"g":2,"d":"Friday","s":"7:30","e":"7:40","b":"Arrival","r":"Arrival","t":"No Students"},
       {"g":2,"d":"Friday","s":"7:40","e":"8:00","b":"Spanish Morning Meeting","r":"Spanish Morning Meeting","t":"With Students"},
       {"g":2,"d":"Friday","s":"8:00","e":"8:45","b":"Spanish","r":"Spanish","t":"No Students"},
       {"g":2,"d":"Friday","s":"8:50","e":"9:30","b":"Changemakers","r":"Changemakers","t":"With Students"},
       {"g":2,"d":"Friday","s":"9:30","e":"9:50","b":"Break","r":"Break","t":"No Students"},
       {"g":2,"d":"Friday","s":"9:50","e":"10:40","b":"Math","r":"Math","t":"With Students"},
-      {"g":2,"d":"Friday","s":"10:45","e":"11:30","b":"Specials","r":"Specials (prep)","t":"No Students"},
+      {"g":2,"d":"Friday","s":"10:45","e":"11:30","b":"Specials","r":"Specials — Team Meeting: Nuts & Bolts","m":"Team Meeting: Nuts & Bolts","t":"No Students"},
       {"g":2,"d":"Friday","s":"11:30","e":"12:20","b":"WINN","r":"WINN","t":"With Students"},
       {"g":2,"d":"Friday","s":"12:20","e":"12:45","b":"Recess","r":"Recess","t":"No Students"},
       {"g":2,"d":"Friday","s":"12:45","e":"1:10","b":"Lunch","r":"Lunch","t":"No Students"},
       {"g":2,"d":"Friday","s":"1:10","e":"2:30","b":"ELA","r":"ELA","t":"With Students"},
       {"g":2,"d":"Friday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
+
+      // GRADE 3
       {"g":3,"d":"Monday","s":"7:30","e":"7:40","b":"Arrival","r":"Arrival","t":"No Students"},
       {"g":3,"d":"Monday","s":"7:40","e":"8:00","b":"Spanish Morning Meeting","r":"Spanish Morning Meeting","t":"With Students"},
       {"g":3,"d":"Monday","s":"8:00","e":"8:45","b":"Spanish","r":"Spanish","t":"No Students"},
       {"g":3,"d":"Monday","s":"8:50","e":"9:20","b":"Changemakers","r":"Changemakers","t":"With Students"},
       {"g":3,"d":"Monday","s":"9:30","e":"10:25","b":"Math","r":"Math","t":"With Students"},
       {"g":3,"d":"Monday","s":"10:25","e":"10:40","b":"Break","r":"Break","t":"No Students"},
-      {"g":3,"d":"Monday","s":"10:45","e":"11:30","b":"Specials","r":"Specials (prep)","t":"No Students"},
+      {"g":3,"d":"Monday","s":"10:45","e":"11:30","b":"Specials","r":"Specials — Team Meeting: Nuts & Bolts","m":"Team Meeting: Nuts & Bolts","t":"No Students"},
       {"g":3,"d":"Monday","s":"11:30","e":"12:20","b":"WINN","r":"WINN","t":"With Students"},
       {"g":3,"d":"Monday","s":"12:20","e":"12:45","b":"Recess","r":"Recess","t":"No Students"},
       {"g":3,"d":"Monday","s":"12:45","e":"1:10","b":"Lunch","r":"Lunch","t":"No Students"},
       {"g":3,"d":"Monday","s":"1:10","e":"2:30","b":"ELA","r":"ELA","t":"With Students"},
       {"g":3,"d":"Monday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
+
       {"g":3,"d":"Tuesday","s":"7:40","e":"8:00","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
       {"g":3,"d":"Tuesday","s":"8:00","e":"9:20","b":"ELA","r":"ELA / Library (alt. weeks)","t":"With Students"},
       {"g":3,"d":"Tuesday","s":"9:20","e":"10:25","b":"Math","r":"Math","t":"With Students"},
       {"g":3,"d":"Tuesday","s":"10:25","e":"10:45","b":"Break","r":"Break","t":"No Students"},
-      {"g":3,"d":"Tuesday","s":"10:45","e":"11:30","b":"Spanish","r":"Spanish","t":"No Students"},
-      {"g":3,"d":"Tuesday","s":"11:35","e":"12:20","b":"Specials","r":"Specials (prep)","t":"No Students"},
+      {"g":3,"d":"Tuesday","s":"10:45","e":"11:30","b":"Spanish","r":"Spanish — Collaborative Planning","m":"Collaborative Planning","t":"No Students"},
+      {"g":3,"d":"Tuesday","s":"11:35","e":"12:20","b":"Specials","r":"Specials — Collaborative Planning","m":"Collaborative Planning","t":"No Students"},
       {"g":3,"d":"Tuesday","s":"12:20","e":"12:45","b":"Recess","r":"Recess","t":"No Students"},
       {"g":3,"d":"Tuesday","s":"12:45","e":"1:10","b":"Lunch","r":"Lunch","t":"No Students"},
       {"g":3,"d":"Tuesday","s":"1:10","e":"1:50","b":"WINN","r":"WINN","t":"With Students"},
       {"g":3,"d":"Tuesday","s":"1:50","e":"2:30","b":"Changemakers","r":"Changemakers","t":"With Students"},
       {"g":3,"d":"Tuesday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
+
       {"g":3,"d":"Wednesday","s":"7:40","e":"8:00","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
       {"g":3,"d":"Wednesday","s":"8:00","e":"8:40","b":"ELA","r":"ELA","t":"With Students"},
       {"g":3,"d":"Wednesday","s":"8:45","e":"9:30","b":"Specials","r":"Specials (prep)","t":"No Students"},
@@ -1112,6 +1157,7 @@
       {"g":3,"d":"Wednesday","s":"1:10","e":"1:55","b":"Spanish","r":"Spanish","t":"No Students"},
       {"g":3,"d":"Wednesday","s":"2:00","e":"2:30","b":"Changemakers","r":"Changemakers","t":"With Students"},
       {"g":3,"d":"Wednesday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
+
       {"g":3,"d":"Thursday","s":"7:40","e":"8:00","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
       {"g":3,"d":"Thursday","s":"8:00","e":"9:05","b":"Math","r":"Math","t":"With Students"},
       {"g":3,"d":"Thursday","s":"9:05","e":"9:35","b":"WINN","r":"WINN","t":"With Students"},
@@ -1124,6 +1170,7 @@
       {"g":3,"d":"Thursday","s":"1:10","e":"1:55","b":"Specials","r":"Specials (prep)","t":"No Students"},
       {"g":3,"d":"Thursday","s":"2:00","e":"2:30","b":"ELA","r":"ELA","t":"With Students"},
       {"g":3,"d":"Thursday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
+
       {"g":3,"d":"Friday","s":"7:40","e":"7:50","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
       {"g":3,"d":"Friday","s":"7:55","e":"8:40","b":"Specials","r":"Specials (prep)","t":"No Students"},
       {"g":3,"d":"Friday","s":"8:45","e":"10:15","b":"ELA","r":"ELA","t":"With Students"},
@@ -1135,6 +1182,8 @@
       {"g":3,"d":"Friday","s":"1:10","e":"1:50","b":"Changemakers","r":"Changemakers","t":"With Students"},
       {"g":3,"d":"Friday","s":"1:50","e":"2:30","b":"WINN","r":"WINN","t":"With Students"},
       {"g":3,"d":"Friday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
+
+      // GRADE 4
       {"g":4,"d":"Monday","s":"7:40","e":"8:00","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
       {"g":4,"d":"Monday","s":"8:00","e":"8:40","b":"ELA","r":"ELA","t":"With Students"},
       {"g":4,"d":"Monday","s":"8:45","e":"9:30","b":"Specials","r":"Specials (prep)","t":"No Students"},
@@ -1147,6 +1196,7 @@
       {"g":4,"d":"Monday","s":"1:10","e":"1:55","b":"Spanish","r":"Spanish","t":"No Students"},
       {"g":4,"d":"Monday","s":"2:00","e":"2:30","b":"Changemakers","r":"Changemakers","t":"With Students"},
       {"g":4,"d":"Monday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
+
       {"g":4,"d":"Tuesday","s":"7:40","e":"8:00","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
       {"g":4,"d":"Tuesday","s":"8:00","e":"9:00","b":"Math","r":"Math","t":"With Students"},
       {"g":4,"d":"Tuesday","s":"9:00","e":"9:30","b":"WINN","r":"WINN","t":"With Students"},
@@ -1159,6 +1209,7 @@
       {"g":4,"d":"Tuesday","s":"1:10","e":"1:55","b":"Specials","r":"Specials (prep)","t":"No Students"},
       {"g":4,"d":"Tuesday","s":"2:00","e":"2:30","b":"ELA","r":"ELA","t":"With Students"},
       {"g":4,"d":"Tuesday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
+
       {"g":4,"d":"Wednesday","s":"7:40","e":"8:00","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
       {"g":4,"d":"Wednesday","s":"7:55","e":"8:40","b":"Specials","r":"Specials (prep)","t":"No Students"},
       {"g":4,"d":"Wednesday","s":"8:45","e":"9:30","b":"ELA","r":"ELA","t":"With Students"},
@@ -1169,1277 +1220,4 @@
       {"g":4,"d":"Wednesday","s":"12:20","e":"12:45","b":"Lunch","r":"Lunch","t":"No Students"},
       {"g":4,"d":"Wednesday","s":"12:45","e":"1:10","b":"Recess","r":"Recess","t":"No Students"},
       {"g":4,"d":"Wednesday","s":"1:10","e":"1:50","b":"Changemakers","r":"Changemakers","t":"With Students"},
-      {"g":4,"d":"Wednesday","s":"1:50","e":"2:30","b":"WINN","r":"WINN","t":"With Students"},
-      {"g":4,"d":"Wednesday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
-      {"g":4,"d":"Thursday","s":"7:30","e":"7:40","b":"Arrival","r":"Arrival","t":"No Students"},
-      {"g":4,"d":"Thursday","s":"7:40","e":"8:00","b":"Spanish Morning Meeting","r":"Spanish Morning Meeting","t":"With Students"},
-      {"g":4,"d":"Thursday","s":"8:00","e":"8:45","b":"Spanish","r":"Spanish","t":"No Students"},
-      {"g":4,"d":"Thursday","s":"8:50","e":"9:30","b":"Changemakers","r":"Changemakers","t":"With Students"},
-      {"g":4,"d":"Thursday","s":"9:30","e":"9:50","b":"Break","r":"Break","t":"No Students"},
-      {"g":4,"d":"Thursday","s":"9:50","e":"10:40","b":"Math","r":"Math","t":"With Students"},
-      {"g":4,"d":"Thursday","s":"10:45","e":"11:30","b":"Specials","r":"Specials (prep)","t":"No Students"},
-      {"g":4,"d":"Thursday","s":"11:35","e":"12:20","b":"WINN","r":"WINN","t":"With Students"},
-      {"g":4,"d":"Thursday","s":"12:20","e":"12:45","b":"Lunch","r":"Lunch","t":"No Students"},
-      {"g":4,"d":"Thursday","s":"12:45","e":"1:10","b":"Recess","r":"Recess","t":"No Students"},
-      {"g":4,"d":"Thursday","s":"1:10","e":"2:30","b":"ELA","r":"ELA","t":"With Students"},
-      {"g":4,"d":"Thursday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
-      {"g":4,"d":"Friday","s":"7:40","e":"8:00","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
-      {"g":4,"d":"Friday","s":"8:00","e":"9:30","b":"ELA","r":"ELA","t":"With Students"},
-      {"g":4,"d":"Friday","s":"9:30","e":"9:50","b":"Break","r":"Break","t":"No Students"},
-      {"g":4,"d":"Friday","s":"9:50","e":"10:40","b":"Math","r":"Math","t":"With Students"},
-      {"g":4,"d":"Friday","s":"10:45","e":"11:30","b":"Spanish","r":"Spanish","t":"No Students"},
-      {"g":4,"d":"Friday","s":"11:35","e":"12:20","b":"Specials","r":"Specials (prep)","t":"No Students"},
-      {"g":4,"d":"Friday","s":"12:20","e":"12:45","b":"Lunch","r":"Lunch","t":"No Students"},
-      {"g":4,"d":"Friday","s":"12:45","e":"1:10","b":"Recess","r":"Recess","t":"No Students"},
-      {"g":4,"d":"Friday","s":"1:10","e":"1:50","b":"WINN","r":"WINN","t":"With Students"},
-      {"g":4,"d":"Friday","s":"1:50","e":"2:30","b":"Changemakers","r":"Changemakers","t":"With Students"},
-      {"g":4,"d":"Friday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
-      {"g":5,"d":"Monday","s":"7:40","e":"7:50","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
-      {"g":5,"d":"Monday","s":"7:55","e":"8:40","b":"Specials","r":"Specials (prep)","t":"No Students"},
-      {"g":5,"d":"Monday","s":"8:45","e":"9:30","b":"Math","r":"Math","t":"With Students"},
-      {"g":5,"d":"Monday","s":"9:30","e":"9:50","b":"Break","r":"Break","t":"No Students"},
-      {"g":5,"d":"Monday","s":"9:50","e":"10:35","b":"ELA","r":"ELA","t":"With Students"},
-      {"g":5,"d":"Monday","s":"10:45","e":"11:30","b":"Changemakers","r":"Changemakers","t":"With Students"},
-      {"g":5,"d":"Monday","s":"11:35","e":"12:20","b":"Spanish","r":"Spanish","t":"No Students"},
-      {"g":5,"d":"Monday","s":"12:20","e":"12:45","b":"Lunch","r":"Lunch","t":"No Students"},
-      {"g":5,"d":"Monday","s":"12:45","e":"1:10","b":"Recess","r":"Recess","t":"No Students"},
-      {"g":5,"d":"Monday","s":"1:10","e":"1:50","b":"ELA","r":"ELA","t":"With Students"},
-      {"g":5,"d":"Monday","s":"1:50","e":"2:30","b":"WINN","r":"WINN","t":"With Students"},
-      {"g":5,"d":"Monday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
-      {"g":5,"d":"Tuesday","s":"7:30","e":"7:40","b":"Arrival","r":"Arrival","t":"No Students"},
-      {"g":5,"d":"Tuesday","s":"7:40","e":"8:00","b":"Spanish Morning Meeting","r":"Spanish Morning Meeting","t":"With Students"},
-      {"g":5,"d":"Tuesday","s":"8:00","e":"8:45","b":"Spanish","r":"Spanish","t":"No Students"},
-      {"g":5,"d":"Tuesday","s":"8:50","e":"9:30","b":"Changemakers","r":"Changemakers","t":"With Students"},
-      {"g":5,"d":"Tuesday","s":"9:30","e":"9:50","b":"Break","r":"Break","t":"No Students"},
-      {"g":5,"d":"Tuesday","s":"9:50","e":"10:40","b":"Math","r":"Math","t":"With Students"},
-      {"g":5,"d":"Tuesday","s":"10:45","e":"11:30","b":"Specials","r":"Specials (prep)","t":"No Students"},
-      {"g":5,"d":"Tuesday","s":"11:30","e":"12:20","b":"WINN","r":"WINN","t":"With Students"},
-      {"g":5,"d":"Tuesday","s":"12:20","e":"12:45","b":"Lunch","r":"Lunch","t":"No Students"},
-      {"g":5,"d":"Tuesday","s":"12:45","e":"1:10","b":"Recess","r":"Recess","t":"No Students"},
-      {"g":5,"d":"Tuesday","s":"1:10","e":"2:30","b":"ELA","r":"ELA","t":"With Students"},
-      {"g":5,"d":"Tuesday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
-      {"g":5,"d":"Wednesday","s":"7:40","e":"8:00","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
-      {"g":5,"d":"Wednesday","s":"8:00","e":"9:30","b":"ELA","r":"ELA","t":"With Students"},
-      {"g":5,"d":"Wednesday","s":"9:30","e":"9:50","b":"Break","r":"Break","t":"No Students"},
-      {"g":5,"d":"Wednesday","s":"9:50","e":"10:40","b":"Math","r":"Math","t":"With Students"},
-      {"g":5,"d":"Wednesday","s":"10:45","e":"11:30","b":"Spanish","r":"Spanish","t":"No Students"},
-      {"g":5,"d":"Wednesday","s":"11:35","e":"12:20","b":"Specials","r":"Specials (prep)","t":"No Students"},
-      {"g":5,"d":"Wednesday","s":"12:20","e":"12:45","b":"Lunch","r":"Lunch","t":"No Students"},
-      {"g":5,"d":"Wednesday","s":"12:45","e":"1:10","b":"Recess","r":"Recess","t":"No Students"},
-      {"g":5,"d":"Wednesday","s":"1:10","e":"1:50","b":"WINN","r":"WINN","t":"With Students"},
-      {"g":5,"d":"Wednesday","s":"1:50","e":"2:30","b":"Changemakers","r":"Changemakers","t":"With Students"},
-      {"g":5,"d":"Wednesday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
-      {"g":5,"d":"Thursday","s":"7:40","e":"8:00","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
-      {"g":5,"d":"Thursday","s":"8:00","e":"8:40","b":"ELA","r":"ELA","t":"With Students"},
-      {"g":5,"d":"Thursday","s":"8:45","e":"9:30","b":"Specials","r":"Specials (prep)","t":"No Students"},
-      {"g":5,"d":"Thursday","s":"9:30","e":"10:30","b":"Math","r":"Math","t":"With Students"},
-      {"g":5,"d":"Thursday","s":"10:30","e":"10:50","b":"Break","r":"Break","t":"No Students"},
-      {"g":5,"d":"Thursday","s":"10:50","e":"11:30","b":"WINN","r":"WINN","t":"With Students"},
-      {"g":5,"d":"Thursday","s":"11:30","e":"12:20","b":"Changemakers","r":"Changemakers","t":"With Students"},
-      {"g":5,"d":"Thursday","s":"12:20","e":"12:45","b":"Lunch","r":"Lunch","t":"No Students"},
-      {"g":5,"d":"Thursday","s":"12:45","e":"1:10","b":"Recess","r":"Recess","t":"No Students"},
-      {"g":5,"d":"Thursday","s":"1:10","e":"1:55","b":"Spanish","r":"Spanish","t":"No Students"},
-      {"g":5,"d":"Thursday","s":"2:00","e":"2:30","b":"ELA","r":"ELA","t":"With Students"},
-      {"g":5,"d":"Thursday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
-      {"g":5,"d":"Friday","s":"7:40","e":"8:00","b":"Morning Meeting","r":"Morning Meeting","t":"With Students"},
-      {"g":5,"d":"Friday","s":"8:00","e":"9:00","b":"Math","r":"Math","t":"With Students"},
-      {"g":5,"d":"Friday","s":"9:00","e":"9:30","b":"WINN","r":"WINN","t":"With Students"},
-      {"g":5,"d":"Friday","s":"9:30","e":"9:50","b":"Break","r":"Break","t":"No Students"},
-      {"g":5,"d":"Friday","s":"9:55","e":"10:40","b":"Spanish","r":"Spanish","t":"No Students"},
-      {"g":5,"d":"Friday","s":"10:40","e":"11:30","b":"Changemakers","r":"Changemakers","t":"With Students"},
-      {"g":5,"d":"Friday","s":"11:30","e":"12:20","b":"ELA","r":"ELA","t":"With Students"},
-      {"g":5,"d":"Friday","s":"12:20","e":"12:45","b":"Lunch","r":"Lunch","t":"No Students"},
-      {"g":5,"d":"Friday","s":"12:45","e":"1:10","b":"Recess","r":"Recess","t":"No Students"},
-      {"g":5,"d":"Friday","s":"1:10","e":"1:55","b":"Specials","r":"Specials (prep)","t":"No Students"},
-      {"g":5,"d":"Friday","s":"2:00","e":"2:30","b":"ELA","r":"ELA","t":"With Students"},
-      {"g":5,"d":"Friday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"}
-    ];
-
-    /* ========================================================================
-       2. CONSTANTS & TIME HELPERS
-       ======================================================================== */
-    const GRADES = [1, 2, 3, 4, 5];
-    const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-
-    // Timeline bounds: 7:30 AM (450 min) to 2:45 PM (885 min)
-    const DAY_START_MIN = 450; // 7:30 AM
-    const DAY_END_MIN = 885;   // 2:45 PM (14:45)
-    const DAY_SPAN_MIN = DAY_END_MIN - DAY_START_MIN; // 435 min
-
-    const AXIS_TICKS = [
-      { min: 450, label: '7:30' },
-      { min: 510, label: '8:30' },
-      { min: 570, label: '9:30' },
-      { min: 630, label: '10:30' },
-      { min: 690, label: '11:30' },
-      { min: 750, label: '12:30' },
-      { min: 810, label: '1:30' },
-      { min: 885, label: '2:45' }
-    ];
-
-    const EXCLUDED_TARGET_BLOCKS = new Set(['HR Time', 'Dismissal', 'Arrival']);
-
-    const TARGET_BLOCK_ORDER = [
-      'Math',
-      'ELA',
-      'WINN',
-      'Changemakers',
-      'Morning Meeting',
-      'Spanish Morning Meeting',
-      'Specials',
-      'Spanish',
-      'Break',
-      'Lunch',
-      'Recess'
-    ];
-
-    const COMPARE_BLOCKS_META = [
-      { name: 'Break', type: 'No Students' },
-      { name: 'Specials', type: 'No Students' },
-      { name: 'Spanish', type: 'No Students' },
-      { name: 'Recess', type: 'No Students' },
-      { name: 'Lunch', type: 'No Students' },
-      { name: 'Math', type: 'With Students' },
-      { name: 'ELA', type: 'With Students' },
-      { name: 'WINN', type: 'With Students' },
-      { name: 'Changemakers', type: 'With Students' },
-      { name: 'Morning Meeting', type: 'With Students' },
-      { name: 'Spanish Morning Meeting', type: 'With Students' },
-      { name: 'HR Time', type: 'With Students' }
-    ];
-
-    const NO_STUDENTS_SET = new Set(['Break', 'Specials', 'Spanish', 'Recess', 'Lunch']);
-    const WITH_STUDENTS_SET = new Set([
-      'Math',
-      'ELA',
-      'WINN',
-      'Changemakers',
-      'Morning Meeting',
-      'Spanish Morning Meeting',
-      'HR Time'
-    ]);
-
-    const OVERLAP_OPTIONS = [1, 15, 30, 45];
-
-    /**
-     * Converts schedule string ("7:40", "1:10", "12:20") to minutes since midnight.
-     * Hours < 7 are afternoon PM hours (+12).
-     */
-    function scheduleStrToMinutes(str) {
-      const [hStr, mStr] = str.split(':');
-      let h = parseInt(hStr, 10);
-      const m = parseInt(mStr, 10);
-      if (h < 7) h += 12;
-      return h * 60 + m;
-    }
-
-    /**
-     * Formats minutes since midnight into "h:mm AM/PM" (e.g., "10:25 AM").
-     */
-    function formatMinutes(totalMins) {
-      const h24 = Math.floor(totalMins / 60);
-      const m = totalMins % 60;
-      const ampm = h24 >= 12 ? 'PM' : 'AM';
-      const h12 = h24 > 12 ? h24 - 12 : h24 === 0 ? 12 : h24;
-      return `${h12}:${String(m).padStart(2, '0')} ${ampm}`;
-    }
-
-    /**
-     * Formats short time without AM/PM when space is tight on timeline blocks.
-     */
-    function formatShortTime(totalMins) {
-      const h24 = Math.floor(totalMins / 60);
-      const m = totalMins % 60;
-      const h12 = h24 > 12 ? h24 - 12 : h24 === 0 ? 12 : h24;
-      return `${h12}:${String(m).padStart(2, '0')}`;
-    }
-
-    /**
-     * Parses user-entered time strings flexibly ("10:25", "10:25 AM", "1:15 PM", "13:15", etc.)
-     * into minutes since midnight. Returns null if invalid.
-     */
-    function parseFlexibleTime(input) {
-      if (!input || typeof input !== 'string') return null;
-      const cleaned = input.trim().toLowerCase().replace(/\./g, '');
-      const match = cleaned.match(/^(\d{1,2}):(\d{2})\s*(am|pm|a|p)?$/);
-      if (!match) return null;
-
-      let hours = parseInt(match[1], 10);
-      const minutes = parseInt(match[2], 10);
-      const meridiem = match[3] || '';
-
-      if (minutes < 0 || minutes > 59 || hours < 1 || hours > 23) return null;
-
-      if (meridiem.startsWith('p')) {
-        if (hours < 12) hours += 12;
-      } else if (meridiem.startsWith('a')) {
-        if (hours === 12) hours = 0;
-      } else {
-        // School day heuristic when AM/PM omitted: 1..6 -> PM (13..18), 7..12 -> 7..12
-        if (hours >= 1 && hours <= 6) hours += 12;
-      }
-
-      return hours * 60 + minutes;
-    }
-
-    // Pre-enrich schedule items with parsed start/end minutes
-    const ENRICHED_SCHEDULE = SCHEDULE_DATA.map((item) => {
-      const startMin = scheduleStrToMinutes(item.s);
-      const endMin = scheduleStrToMinutes(item.e);
-      return {
-        ...item,
-        startMin,
-        endMin,
-        duration: endMin - startMin
-      };
-    });
-
-    /* ========================================================================
-       3. APPLICATION STATE
-       ======================================================================== */
-    const state = {
-      mode: 'block', // 'block' | 'daytime' | 'grid'
-
-      // Mode 1: By Instructional Block
-      selectedGrade: 4,
-      targetBlock: 'Math',
-      selectedDays: new Set(DAYS),
-      compareAgainst: new Set(['Break', 'Specials', 'Spanish', 'Recess', 'Lunch']),
-      minOverlap: 15,
-
-      // Mode 2: By Day & Time
-      dtDay: 'Wednesday',
-      dtStartText: '10:25 AM',
-      dtEndText: '11:30 AM',
-
-      // Mode 3: Master Grid
-      gridDay: 'Wednesday',
-      gridHighlight: 'all' // 'all' | 'No Students' | 'With Students'
-    };
-
-    /* ========================================================================
-       4. UTILITY FUNCTIONS (HTML ESCAPING, CLIPBOARD, TOOLTIPS, CALCULATIONS)
-       ======================================================================== */
-    function escapeHtml(str) {
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-    }
-
-    function showToast(message) {
-      const toast = document.getElementById('toastBanner');
-      toast.textContent = message;
-      toast.classList.add('show');
-      clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => {
-        toast.classList.remove('show');
-      }, 2200);
-    }
-
-    /**
-     * Copies text using document.execCommand('copy') for full iFrame compatibility.
-     */
-    function copyTextToClipboard(text, btnEl) {
-      try {
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        textarea.setAttribute('readonly', '');
-        textarea.style.position = 'fixed';
-        textarea.style.top = '-9999px';
-        textarea.style.left = '-9999px';
-        document.body.appendChild(textarea);
-        textarea.select();
-        textarea.setSelectionRange(0, textarea.value.length);
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-
-        if (btnEl) {
-          const original = btnEl.innerHTML;
-          btnEl.classList.add('copied');
-          btnEl.textContent = 'Copied!';
-          setTimeout(() => {
-            btnEl.classList.remove('copied');
-            btnEl.innerHTML = original;
-          }, 1600);
-        }
-        showToast('Summary copied to clipboard');
-      } catch (err) {
-        showToast('Unable to copy summary');
-      }
-    }
-
-    /**
-     * Returns ordered distinct target subject blocks for a given grade,
-     * strictly excluding HR Time, Dismissal, and Arrival.
-     */
-    function getValidTargetBlocksForGrade(grade) {
-      const present = new Set(
-        ENRICHED_SCHEDULE
-          .filter((item) => item.g === grade && !EXCLUDED_TARGET_BLOCKS.has(item.b))
-          .map((item) => item.b)
-      );
-      const ordered = TARGET_BLOCK_ORDER.filter((b) => present.has(b));
-      present.forEach((b) => {
-        if (!ordered.includes(b)) ordered.push(b);
-      });
-      return ordered;
-    }
-
-    /**
-     * Computes overlap in minutes between [aStart, aEnd] and [bStart, bEnd].
-     */
-    function getOverlapWindow(aStart, aEnd, bStart, bEnd) {
-      const start = Math.max(aStart, bStart);
-      const end = Math.min(aEnd, bEnd);
-      const mins = end - start;
-      return mins > 0 ? { start, end, mins } : null;
-    }
-
-    /**
-     * Renders the 7:30 AM - 2:45 PM proportional time axis.
-     */
-    function renderTimelineAxis() {
-      const ticksHtml = AXIS_TICKS.map((tick) => {
-        const leftPct = ((tick.min - DAY_START_MIN) / DAY_SPAN_MIN) * 100;
-        return `<span class="axis-tick" style="left: ${leftPct.toFixed(4)}%;">${tick.label}</span>`;
-      }).join('');
-
-      return `
-        <div class="timeline-axis-row">
-          <div></div>
-          <div class="axis-track">${ticksHtml}</div>
-        </div>
-      `;
-    }
-
-    /**
-     * Renders vertical gridlines inside a track lane.
-     */
-    function renderGridLines() {
-      return AXIS_TICKS.slice(1, -1)
-        .map((tick) => {
-          const leftPct = ((tick.min - DAY_START_MIN) / DAY_SPAN_MIN) * 100;
-          return `<div class="grid-line" style="left: ${leftPct.toFixed(4)}%;"></div>`;
-        })
-        .join('');
-    }
-
-    /**
-     * Builds the HTML for a single block segment inside a grade track lane.
-     */
-    function renderBlockSegment(block, options) {
-      const {
-        visualClass,
-        extraBadge = '',
-        overlapInfo = null
-      } = options;
-
-      const clampedStart = Math.max(DAY_START_MIN, block.startMin);
-      const clampedEnd = Math.min(DAY_END_MIN, block.endMin);
-      if (clampedEnd <= clampedStart) return '';
-
-      const leftPct = ((clampedStart - DAY_START_MIN) / DAY_SPAN_MIN) * 100;
-      const widthPct = ((clampedEnd - clampedStart) / DAY_SPAN_MIN) * 100;
-
-      const fullRange = `${formatMinutes(block.startMin)} – ${formatMinutes(block.endMin)}`;
-      const shortRange = `${formatShortTime(block.startMin)}–${formatShortTime(block.endMin)}`;
-      const showTimeLine = widthPct >= 7.5;
-
-      const tooltipTitle = `Grade ${block.g} · ${block.b}`;
-      const tooltipSub = `${block.d} · ${fullRange} (${block.duration} min)${block.r !== block.b ? ` · ${block.r}` : ''}`;
-      const tooltipBadge = overlapInfo
-        ? `${overlapInfo.mins} min overlap (${formatMinutes(overlapInfo.start)} – ${formatMinutes(overlapInfo.end)})`
-        : extraBadge || block.t;
-
-      return `
-        <div
-          class="sched-block ${visualClass}"
-          style="left: ${leftPct.toFixed(4)}%; width: ${widthPct.toFixed(4)}%;"
-          data-tt-title="${escapeHtml(tooltipTitle)}"
-          data-tt-sub="${escapeHtml(tooltipSub)}"
-          data-tt-badge="${escapeHtml(tooltipBadge)}"
-        >
-          <div class="block-name">${escapeHtml(block.b)}</div>
-          ${showTimeLine ? `<div class="block-time">${escapeHtml(shortRange)}</div>` : ''}
-        </div>
-      `;
-    }
-
-    /* ========================================================================
-       5. MODE 1: BY INSTRUCTIONAL BLOCK RENDERER
-       ======================================================================== */
-    function renderBlockMode() {
-      const validTargets = getValidTargetBlocksForGrade(state.selectedGrade);
-      if (!validTargets.includes(state.targetBlock)) {
-        state.targetBlock = validTargets.includes('Math') ? 'Math' : validTargets[0];
-      }
-
-      const allDaysSelected = state.selectedDays.size === DAYS.length;
-
-      // Filter card HTML
-      const filterCardHtml = `
-        <section class="card" aria-label="Classroom visit filters">
-          <div class="filter-grid">
-            <!-- 1. GRADE LEVEL -->
-            <div class="filter-section">
-              <div class="section-label">1. GRADE LEVEL</div>
-              <div class="pill-row">
-                ${GRADES.map(
-                  (g) => `
-                    <button
-                      type="button"
-                      class="pill ${state.selectedGrade === g ? 'active' : ''}"
-                      data-action="select-grade"
-                      data-grade="${g}"
-                    >
-                      Grade ${g}
-                    </button>
-                  `
-                ).join('')}
-              </div>
-            </div>
-
-            <!-- 2. TARGET SUBJECT / BLOCK -->
-            <div class="filter-section">
-              <div class="section-label">2. TARGET SUBJECT / BLOCK</div>
-              <div class="pill-row">
-                ${validTargets
-                  .map(
-                    (subj) => `
-                      <button
-                        type="button"
-                        class="pill ${state.targetBlock === subj ? 'active' : ''}"
-                        data-action="select-target"
-                        data-subject="${escapeHtml(subj)}"
-                      >
-                        ${escapeHtml(subj)}
-                      </button>
-                    `
-                  )
-                  .join('')}
-              </div>
-            </div>
-
-            <!-- 3. DAYS OF THE WEEK -->
-            <div class="filter-section">
-              <div class="section-label">3. DAYS OF THE WEEK</div>
-              <div class="pill-row">
-                <button
-                  type="button"
-                  class="pill ${allDaysSelected ? 'active' : ''}"
-                  data-action="select-all-days"
-                >
-                  All Days
-                </button>
-                ${DAYS.map((day) => {
-                  const isActive = state.selectedDays.has(day);
-                  return `
-                    <div
-                      role="button"
-                      tabindex="0"
-                      class="pill day-pill ${isActive ? 'active' : ''}"
-                      data-action="toggle-day"
-                      data-day="${day}"
-                    >
-                      <span>${day}</span>
-                      <button
-                        type="button"
-                        class="only-btn"
-                        data-action="only-day"
-                        data-day="${day}"
-                        aria-label="Select ${day} only"
-                      >only</button>
-                    </div>
-                  `;
-                }).join('')}
-              </div>
-            </div>
-
-            <!-- 4. COMPARE AGAINST -->
-            <div class="filter-section">
-              <div class="section-label">4. COMPARE AGAINST</div>
-              <div class="pill-row">
-                ${COMPARE_BLOCKS_META.map((item) => {
-                  const isActive = state.compareAgainst.has(item.name);
-                  const isNoStudents = item.type === 'No Students';
-                  const typeClass = isNoStudents ? 'type-no-students' : 'type-with-students';
-                  const dotClass = isNoStudents ? 'dot-no-students' : 'dot-with-students';
-                  return `
-                    <button
-                      type="button"
-                      class="pill compare-pill ${typeClass} ${isActive ? 'active' : ''}"
-                      data-action="toggle-compare"
-                      data-compare="${escapeHtml(item.name)}"
-                    >
-                      <span class="status-dot ${dotClass}"></span>
-                      <span>${escapeHtml(item.name)}</span>
-                    </button>
-                  `;
-                }).join('')}
-              </div>
-              <div class="presets-row">
-                <span class="presets-label">QUICK PRESETS:</span>
-                <button type="button" class="preset-btn" data-action="preset-compare" data-preset="no-students">
-                  <span class="status-dot dot-no-students"></span>
-                  <span>No Students</span>
-                </button>
-                <button type="button" class="preset-btn" data-action="preset-compare" data-preset="with-students">
-                  <span class="status-dot dot-with-students"></span>
-                  <span>With Students</span>
-                </button>
-                <button type="button" class="preset-btn" data-action="preset-compare" data-preset="unselect-all">
-                  <span>Unselect all</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- 5. MINIMUM OVERLAP WINDOW -->
-            <div class="filter-section">
-              <div class="section-label">5. MINIMUM OVERLAP WINDOW</div>
-              <div class="pill-row">
-                ${OVERLAP_OPTIONS.map(
-                  (mins) => `
-                    <button
-                      type="button"
-                      class="pill ${state.minOverlap === mins ? 'active' : ''}"
-                      data-action="select-overlap"
-                      data-overlap="${mins}"
-                    >
-                      ${mins}+ min
-                    </button>
-                  `
-                ).join('')}
-              </div>
-            </div>
-          </div>
-        </section>
-      `;
-
-      // Find matching target occurrences across active days in Monday..Friday chronological order
-      const occurrences = [];
-      DAYS.forEach((day) => {
-        if (!state.selectedDays.has(day)) return;
-        const dayMatches = ENRICHED_SCHEDULE
-          .filter((item) => item.g === state.selectedGrade && item.d === day && item.b === state.targetBlock)
-          .sort((a, b) => a.startMin - b.startMin);
-        occurrences.push(...dayMatches);
-      });
-
-      const resultsHtml = occurrences.length
-        ? occurrences.map((occ, idx) => renderOccurrenceCard(occ, idx)).join('')
-        : `<div class="card"><p class="no-matches-note">No blocks found for Grade ${state.selectedGrade} · ${escapeHtml(state.targetBlock)} on the selected day(s).</p></div>`;
-
-      return `${filterCardHtml}<div class="results-stack">${resultsHtml}</div>`;
-    }
-
-    function renderOccurrenceCard(occ, idx) {
-      const otherGrades = GRADES.filter((g) => g !== occ.g);
-      const targetStart = occ.startMin;
-      const targetEnd = occ.endMin;
-      const guideLeft = ((targetStart - DAY_START_MIN) / DAY_SPAN_MIN) * 100;
-      const guideWidth = ((targetEnd - targetStart) / DAY_SPAN_MIN) * 100;
-
-      // Evaluate matching overlaps per other grade
-      const matchingWindows = [];
-      const availableGradesSet = new Set();
-
-      otherGrades.forEach((g) => {
-        const blocks = ENRICHED_SCHEDULE.filter((item) => item.g === g && item.d === occ.d);
-        blocks.forEach((blk) => {
-          if (!state.compareAgainst.has(blk.b)) return;
-          const ov = getOverlapWindow(targetStart, targetEnd, blk.startMin, blk.endMin);
-          if (ov && ov.mins >= state.minOverlap) {
-            availableGradesSet.add(g);
-            matchingWindows.push({
-              grade: g,
-              block: blk,
-              overlap: ov
-            });
-          }
-        });
-      });
-
-      const availCount = availableGradesSet.size;
-      const headerTitle = `${occ.d} — Grade ${occ.g} · ${occ.b} · ${formatMinutes(targetStart)}–${formatMinutes(targetEnd)} (${occ.duration} min)`;
-
-      // Build plain-text summary for Copy Summary button
-      const summaryLines = [
-        headerTitle,
-        `Availability: ${availCount} of 4 grades available (${state.minOverlap}+ min overlap)`,
-        ...(matchingWindows.length
-          ? matchingWindows.map(
-              (m) =>
-                `• Grade ${m.grade}: ${m.block.b} (${m.block.t}) — ${formatMinutes(m.overlap.start)}–${formatMinutes(m.overlap.end)} (${m.overlap.mins} min overlap)`
-            )
-          : ['• No matching overlapping windows for current filter settings.'])
-      ];
-      const summaryText = summaryLines.join('\n');
-
-      // Target Grade Row
-      const targetGradeBlocks = ENRICHED_SCHEDULE.filter((item) => item.g === occ.g && item.d === occ.d);
-      const targetRowBlocksHtml = targetGradeBlocks
-        .map((blk) => {
-          const isCurrentTarget = blk === occ;
-          return renderBlockSegment(blk, {
-            visualClass: isCurrentTarget ? 'is-target' : 'is-other',
-            extraBadge: isCurrentTarget ? 'Target Block' : blk.t
-          });
-        })
-        .join('');
-
-      // Other 4 Grades Rows
-      const otherRowsHtml = otherGrades
-        .map((g) => {
-          const gradeBlocks = ENRICHED_SCHEDULE.filter((item) => item.g === g && item.d === occ.d);
-          const blocksHtml = gradeBlocks
-            .map((blk) => {
-              const ov = getOverlapWindow(targetStart, targetEnd, blk.startMin, blk.endMin);
-              const isMatch = state.compareAgainst.has(blk.b) && ov && ov.mins >= state.minOverlap;
-              const visualClass = isMatch
-                ? blk.t === 'No Students'
-                  ? 'is-match-no-students'
-                  : 'is-match-with-students'
-                : 'is-other';
-              return renderBlockSegment(blk, {
-                visualClass,
-                overlapInfo: isMatch ? ov : null
-              });
-            })
-            .join('');
-
-          return `
-            <div class="grade-row">
-              <div class="grade-label">Grade ${g}</div>
-              <div class="track-lane">
-                ${renderGridLines()}
-                <div class="target-window-guide" style="left: ${guideLeft.toFixed(4)}%; width: ${guideWidth.toFixed(4)}%;"></div>
-                ${blocksHtml}
-              </div>
-            </div>
-          `;
-        })
-        .join('');
-
-      // Compact Matching Window List
-      const matchesListHtml = matchingWindows.length
-        ? matchingWindows
-            .map((m) => {
-              const dotColor = m.block.t === 'No Students' ? 'var(--green-no-students)' : 'var(--slate-with-students)';
-              return `
-                <div class="match-chip">
-                  <span class="match-chip-dot" style="background-color: ${dotColor};"></span>
-                  <span>Grade ${m.grade} · ${escapeHtml(m.block.b)}</span>
-                  <span class="match-chip-meta">${formatMinutes(m.overlap.start)}–${formatMinutes(m.overlap.end)} (${m.overlap.mins} min)</span>
-                </div>
-              `;
-            })
-            .join('')
-        : `<span class="no-matches-note">No overlapping blocks match the selected filters and ${state.minOverlap}+ min threshold.</span>`;
-
-      return `
-        <article class="card">
-          <div class="result-card-header">
-            <h2 class="result-title">${escapeHtml(headerTitle)}</h2>
-            <div class="result-actions">
-              <span class="avail-badge ${availCount === 0 ? 'zero' : ''}">${availCount} of 4 grades available</span>
-              <button
-                type="button"
-                class="copy-btn"
-                data-action="copy-summary"
-                data-summary="${escapeHtml(summaryText)}"
-              >
-                Copy Summary
-              </button>
-            </div>
-          </div>
-
-          <div class="timeline-subheader">
-            <span class="timeline-caption">SCHEDULE COMPARISON </span>
-            <div class="legend-list">
-              <span class="legend-item"><span class="legend-swatch" style="background: var(--navy-primary);"></span>Target Block</span>
-              <span class="legend-item"><span class="legend-swatch" style="background: var(--green-no-students);"></span>No Students</span>
-              <span class="legend-item"><span class="legend-swatch" style="background: var(--slate-with-students);"></span>With Students</span>
-              <span class="legend-item"><span class="legend-swatch" style="background: var(--other-block);"></span>Other Block</span>
-            </div>
-          </div>
-
-          <div class="timeline-scroll">
-            <div class="timeline-board">
-              ${renderTimelineAxis()}
-              <div class="timeline-rows-wrap">
-                <div class="grade-row target-row">
-                  <div class="grade-label">
-                    Grade ${occ.g}
-                    <span class="role-tag">Target</span>
-                  </div>
-                  <div class="track-lane">
-                    ${renderGridLines()}
-                    ${targetRowBlocksHtml}
-                  </div>
-                </div>
-                ${otherRowsHtml}
-              </div>
-            </div>
-          </div>
-
-          <div class="matches-summary">
-            ${matchesListHtml}
-          </div>
-        </article>
-      `;
-    }
-
-    /* ========================================================================
-       6. MODE 2: BY DAY & TIME RENDERER
-       ======================================================================== */
-    function renderDayTimeMode() {
-      const startMin = parseFlexibleTime(state.dtStartText);
-      const endMin = parseFlexibleTime(state.dtEndText);
-      let validationMsg = '';
-
-      if (startMin === null || endMin === null) {
-        validationMsg = 'Enter valid start and end times (e.g., 10:25 AM and 11:30 AM).';
-      } else if (endMin <= startMin) {
-        validationMsg = 'End time must be after start time.';
-      } else if (startMin < DAY_START_MIN || endMin > DAY_END_MIN) {
-        validationMsg = 'Time window must fall within the 7:30 AM – 2:45 PM school day.';
-      }
-
-      const filterCardHtml = `
-        <section class="card" aria-label="Day and time filters">
-          <div class="filter-grid">
-            <!-- 1. DAY OF THE WEEK -->
-            <div class="filter-section">
-              <div class="section-label">1. DAY OF THE WEEK</div>
-              <div class="pill-row">
-                ${DAYS.map(
-                  (day) => `
-                    <button
-                      type="button"
-                      class="pill ${state.dtDay === day ? 'active' : ''}"
-                      data-action="dt-select-day"
-                      data-day="${day}"
-                    >
-                      ${day}
-                    </button>
-                  `
-                ).join('')}
-              </div>
-            </div>
-
-            <!-- 2. TIME WINDOW -->
-            <div class="filter-section">
-              <div class="section-label">2. TIME WINDOW</div>
-              <div class="time-inputs-wrap">
-                <div class="time-field">
-                  <label for="dtStartInput">Start Time</label>
-                  <input
-                    id="dtStartInput"
-                    type="text"
-                    class="time-input"
-                    value="${escapeHtml(state.dtStartText)}"
-                    placeholder="10:25 AM"
-                    data-action="dt-start-input"
-                  />
-                </div>
-                <div class="time-field">
-                  <label for="dtEndInput">End Time</label>
-                  <input
-                    id="dtEndInput"
-                    type="text"
-                    class="time-input"
-                    value="${escapeHtml(state.dtEndText)}"
-                    placeholder="11:30 AM"
-                    data-action="dt-end-input"
-                  />
-                </div>
-                ${validationMsg ? `<div class="time-error">${escapeHtml(validationMsg)}</div>` : ''}
-              </div>
-            </div>
-          </div>
-        </section>
-      `;
-
-      if (validationMsg) {
-        return filterCardHtml;
-      }
-
-      const windowDuration = endMin - startMin;
-      const guideLeft = ((startMin - DAY_START_MIN) / DAY_SPAN_MIN) * 100;
-      const guideWidth = ((endMin - startMin) / DAY_SPAN_MIN) * 100;
-
-      const matchingWindows = [];
-
-      GRADES.forEach((g) => {
-        const blocks = ENRICHED_SCHEDULE.filter((item) => item.g === g && item.d === state.dtDay);
-        blocks.forEach((blk) => {
-          const ov = getOverlapWindow(startMin, endMin, blk.startMin, blk.endMin);
-          if (ov) {
-            matchingWindows.push({
-              grade: g,
-              block: blk,
-              overlap: ov
-            });
-          }
-        });
-      });
-
-      const blockCount = matchingWindows.length;
-      const headerTitle = `${state.dtDay} — ${formatMinutes(startMin)}–${formatMinutes(endMin)} (${windowDuration} min)`;
-
-      const summaryLines = [headerTitle];
-      GRADES.forEach((g) => {
-        const gradeMatches = matchingWindows.filter((m) => m.grade === g);
-        summaryLines.push(`Grade ${g}:`);
-        if (gradeMatches.length) {
-          gradeMatches.forEach((m) => {
-            summaryLines.push(
-              `  • ${m.block.b}: ${formatMinutes(m.overlap.start)} – ${formatMinutes(m.overlap.end)} · ${m.overlap.mins} min (${m.block.t})`
-            );
-          });
-        } else {
-          summaryLines.push('  • No scheduled blocks in this window.');
-        }
-      });
-      const summaryText = summaryLines.join('\n');
-
-      const allGradeRowsHtml = GRADES.map((g) => {
-        const gradeBlocks = ENRICHED_SCHEDULE.filter((item) => item.g === g && item.d === state.dtDay);
-        const blocksHtml = gradeBlocks
-          .map((blk) => {
-            const ov = getOverlapWindow(startMin, endMin, blk.startMin, blk.endMin);
-            const isMatch = Boolean(ov);
-            const visualClass = isMatch
-              ? blk.t === 'No Students'
-                ? 'is-match-no-students'
-                : 'is-match-with-students'
-              : 'is-other';
-            return renderBlockSegment(blk, {
-              visualClass,
-              overlapInfo: isMatch ? ov : null
-            });
-          })
-          .join('');
-
-        return `
-          <div class="grade-row">
-            <div class="grade-label">Grade ${g}</div>
-            <div class="track-lane">
-              ${renderGridLines()}
-              <div class="target-window-guide" style="left: ${guideLeft.toFixed(4)}%; width: ${guideWidth.toFixed(4)}%;"></div>
-              ${blocksHtml}
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      const gradeCardsHtml = GRADES.map((g) => {
-        const gradeMatches = matchingWindows.filter((m) => m.grade === g);
-        const hasNoStudents = gradeMatches.some((m) => m.block.t === 'No Students');
-        const hasWithStudents = gradeMatches.some((m) => m.block.t === 'With Students');
-        const cardToneClass = hasNoStudents
-          ? 'has-no-students'
-          : hasWithStudents
-            ? 'has-with-students'
-            : '';
-
-        const itemsHtml = gradeMatches.length
-          ? gradeMatches
-              .map((m) => {
-                const isNoStudents = m.block.t === 'No Students';
-                const pillClass = isNoStudents ? 'no-students' : 'with-students';
-                const fullBlockHint =
-                  m.block.startMin !== m.overlap.start || m.block.endMin !== m.overlap.end
-                    ? `Full block: ${formatMinutes(m.block.startMin)} – ${formatMinutes(m.block.endMin)}`
-                    : '';
-                return `
-                  <div class="dt-grade-block-item" ${fullBlockHint ? `title="${escapeHtml(fullBlockHint)}"` : ''}>
-                    <div class="dt-block-info">
-                      <div class="dt-block-title">${escapeHtml(m.block.b)}</div>
-                      <div class="dt-block-meta">${formatMinutes(m.overlap.start)} – ${formatMinutes(m.overlap.end)} · ${m.overlap.mins} min</div>
-                    </div>
-                    <span class="dt-status-pill ${pillClass}">${escapeHtml(m.block.t)}</span>
-                  </div>
-                `;
-              })
-              .join('')
-          : `<div class="no-matches-note">No scheduled blocks in this window.</div>`;
-
-        return `
-          <div class="dt-grade-card ${cardToneClass}">
-            <div class="dt-grade-card-header">Grade ${g}</div>
-            <div class="dt-grade-block-list">
-              ${itemsHtml}
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      const resultCardHtml = `
-        <article class="card">
-          <div class="result-card-header">
-            <h2 class="result-title">${escapeHtml(headerTitle)}</h2>
-            <div class="result-actions">
-              <span class="avail-badge ${blockCount === 0 ? 'zero' : ''}">${blockCount} overlapping block${blockCount === 1 ? '' : 's'}</span>
-              <button
-                type="button"
-                class="copy-btn"
-                data-action="copy-summary"
-                data-summary="${escapeHtml(summaryText)}"
-              >
-                Copy Summary
-              </button>
-            </div>
-          </div>
-
-          <div class="timeline-subheader">
-            <span class="timeline-caption">SCHEDULE COMPARISON </span>
-            <div class="legend-list">
-              <span class="legend-item"><span class="legend-swatch" style="background: rgba(32, 42, 60, 0.14); border: 1.5px dashed rgba(32, 42, 60, 0.45);"></span>Selected Window</span>
-              <span class="legend-item"><span class="legend-swatch" style="background: var(--green-no-students);"></span>No Students</span>
-              <span class="legend-item"><span class="legend-swatch" style="background: var(--slate-with-students);"></span>With Students</span>
-              <span class="legend-item"><span class="legend-swatch" style="background: var(--other-block);"></span>Other Block</span>
-            </div>
-          </div>
-
-          <div class="timeline-scroll">
-            <div class="timeline-board">
-              ${renderTimelineAxis()}
-              <div class="timeline-rows-wrap">
-                ${allGradeRowsHtml}
-              </div>
-            </div>
-          </div>
-
-          <div class="dt-grade-grid">
-            ${gradeCardsHtml}
-          </div>
-        </article>
-      `;
-
-      return `${filterCardHtml}${resultCardHtml}`;
-    }
-
-    /* ========================================================================
-       7. MODE 3: MASTER GRID RENDERER (HORIZONTAL DAILY TIMELINE)
-       ======================================================================== */
-    function renderMasterGridMode() {
-      const highlightOptions = [
-        { id: 'all', label: 'All Blocks' },
-        { id: 'No Students', label: 'No Students' },
-        { id: 'With Students', label: 'With Students' }
-      ];
-
-      const filterCardHtml = `
-        <section class="card" aria-label="Master grid controls">
-          <div class="filter-grid">
-            <div class="filter-section">
-              <div class="section-label">1. DAY OF THE WEEK</div>
-              <div class="pill-row">
-                ${DAYS.map(
-                  (day) => `
-                    <button
-                      type="button"
-                      class="pill ${state.gridDay === day ? 'active' : ''}"
-                      data-action="grid-select-day"
-                      data-day="${day}"
-                    >
-                      ${day}
-                    </button>
-                  `
-                ).join('')}
-              </div>
-            </div>
-
-            <div class="filter-section">
-              <div class="section-label">2. HIGHLIGHT FILTER</div>
-              <div class="pill-row">
-                ${highlightOptions
-                  .map(
-                    (opt) => `
-                      <button
-                        type="button"
-                        class="pill ${state.gridHighlight === opt.id ? 'active' : ''}"
-                        data-action="grid-select-highlight"
-                        data-highlight="${escapeHtml(opt.id)}"
-                      >
-                        ${escapeHtml(opt.label)}
-                      </button>
-                    `
-                  )
-                  .join('')}
-              </div>
-            </div>
-          </div>
-        </section>
-      `;
-
-      const gradeRowsHtml = GRADES.map((g) => {
-        const gradeBlocks = ENRICHED_SCHEDULE.filter((item) => item.g === g && item.d === state.gridDay);
-        const blocksHtml = gradeBlocks
-          .map((blk) => {
-            let visualClass = 'is-other';
-            if (state.gridHighlight === 'all') {
-              visualClass =
-                blk.t === 'No Students' ? 'is-match-no-students' : 'is-match-with-students';
-            } else if (state.gridHighlight === 'No Students') {
-              visualClass = blk.t === 'No Students' ? 'is-match-no-students' : 'is-other';
-            } else if (state.gridHighlight === 'With Students') {
-              visualClass = blk.t === 'With Students' ? 'is-match-with-students' : 'is-other';
-            }
-
-            return renderBlockSegment(blk, { visualClass });
-          })
-          .join('');
-
-        return `
-          <div class="grade-row">
-            <div class="grade-label">Grade ${g}</div>
-            <div class="track-lane master-lane">
-              ${renderGridLines()}
-              ${blocksHtml}
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      const gridCardHtml = `
-        <article class="card">
-          <div class="result-card-header">
-            <h2 class="result-title">${escapeHtml(state.gridDay)} — Master ES Schedule (Grades 1–5)</h2>
-            <div class="legend-list">
-              <span class="legend-item"><span class="legend-swatch" style="background: var(--green-no-students);"></span>No Students</span>
-              <span class="legend-item"><span class="legend-swatch" style="background: var(--slate-with-students);"></span>With Students</span>
-              ${
-                state.gridHighlight !== 'all'
-                  ? `<span class="legend-item"><span class="legend-swatch" style="background: var(--other-block);"></span>Other Block</span>`
-                  : ''
-              }
-            </div>
-          </div>
-
-          <div class="timeline-subheader">
-            <span class="timeline-caption">DAILY TIMELINE </span>
-          </div>
-
-          <div class="timeline-scroll">
-            <div class="timeline-board">
-              ${renderTimelineAxis()}
-              <div class="timeline-rows-wrap">
-                ${gradeRowsHtml}
-              </div>
-            </div>
-          </div>
-        </article>
-      `;
-
-      return `${filterCardHtml}${gridCardHtml}`;
-    }
-
-    /* ========================================================================
-       8. RENDER ORCHESTRATION & EVENT HANDLING
-       ======================================================================== */
-    function renderApp() {
-      const root = document.getElementById('appRoot');
-      if (state.mode === 'block') {
-        root.innerHTML = renderBlockMode();
-      } else if (state.mode === 'daytime') {
-        root.innerHTML = renderDayTimeMode();
-      } else {
-        root.innerHTML = renderMasterGridMode();
-      }
-    }
-
-    // Mode switcher tabs
-    document.querySelectorAll('.mode-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const nextMode = btn.getAttribute('data-mode');
-        if (!nextMode || nextMode === state.mode) return;
-        state.mode = nextMode;
-        document.querySelectorAll('.mode-btn').forEach((b) => {
-          b.classList.toggle('active', b.getAttribute('data-mode') === state.mode);
-        });
-        renderApp();
-      });
-    });
-
-    // Delegated click interactions inside #appRoot
-    document.getElementById('appRoot').addEventListener('click', (e) => {
-      const target = e.target.closest('[data-action]');
-      if (!target) return;
-
-      const action = target.getAttribute('data-action');
-
-      switch (action) {
-        case 'select-grade': {
-          state.selectedGrade = parseInt(target.getAttribute('data-grade'), 10);
-          renderApp();
-          break;
-        }
-        case 'select-target': {
-          state.targetBlock = target.getAttribute('data-subject');
-          renderApp();
-          break;
-        }
-        case 'select-all-days': {
-          state.selectedDays = new Set(DAYS);
-          renderApp();
-          break;
-        }
-        case 'toggle-day': {
-          const day = target.getAttribute('data-day');
-          if (state.selectedDays.has(day)) {
-            if (state.selectedDays.size > 1) {
-              state.selectedDays.delete(day);
-            }
-          } else {
-            state.selectedDays.add(day);
-          }
-          renderApp();
-          break;
-        }
-        case 'only-day': {
-          e.stopPropagation();
-          const day = target.getAttribute('data-day');
-          state.selectedDays = new Set([day]);
-          renderApp();
-          break;
-        }
-        case 'toggle-compare': {
-          const item = target.getAttribute('data-compare');
-          if (state.compareAgainst.has(item)) {
-            state.compareAgainst.delete(item);
-          } else {
-            state.compareAgainst.add(item);
-          }
-          renderApp();
-          break;
-        }
-        case 'preset-compare': {
-          const preset = target.getAttribute('data-preset');
-          if (preset === 'no-students') {
-            state.compareAgainst = new Set(NO_STUDENTS_SET);
-          } else if (preset === 'with-students') {
-            state.compareAgainst = new Set(WITH_STUDENTS_SET);
-          } else if (preset === 'unselect-all') {
-            state.compareAgainst = new Set();
-          }
-          renderApp();
-          break;
-        }
-        case 'select-overlap': {
-          state.minOverlap = parseInt(target.getAttribute('data-overlap'), 10);
-          renderApp();
-          break;
-        }
-        case 'copy-summary': {
-          const summary = target.getAttribute('data-summary') || '';
-          copyTextToClipboard(summary, target);
-          break;
-        }
-
-        // Mode 2 actions
-        case 'dt-select-day': {
-          state.dtDay = target.getAttribute('data-day');
-          renderApp();
-          break;
-        }
-
-        // Mode 3 actions
-        case 'grid-select-day': {
-          state.gridDay = target.getAttribute('data-day');
-          renderApp();
-          break;
-        }
-        case 'grid-select-highlight': {
-          state.gridHighlight = target.getAttribute('data-highlight');
-          renderApp();
-          break;
-        }
-      }
-    });
-
-    // Live manual time inputs for Mode 2 (preserving input cursor focus)
-    document.getElementById('appRoot').addEventListener('input', (e) => {
-      const target = e.target;
-      if (!target || !target.getAttribute) return;
-      const action = target.getAttribute('data-action');
-      if (action === 'dt-start-input' || action === 'dt-end-input') {
-        const cursorPos = target.selectionStart;
-        if (action === 'dt-start-input') {
-          state.dtStartText = target.value;
-        } else {
-          state.dtEndText = target.value;
-        }
-        renderApp();
-        const restored = document.getElementById(target.id);
-        if (restored) {
-          restored.focus();
-          restored.setSelectionRange(cursorPos, cursorPos);
-        }
-      }
-    });
-
-    // Keyboard accessibility for day pills
-    document.getElementById('appRoot').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        const dayPill = e.target.closest('.day-pill');
-        if (dayPill && e.target === dayPill) {
-          e.preventDefault();
-          dayPill.click();
-        }
-      }
-    });
-
-    // Hover Tooltip Handler
-    const tooltipEl = document.getElementById('tooltip');
-
-    document.addEventListener('mouseover', (e) => {
-      const blockEl = e.target.closest('.sched-block');
-      if (!blockEl) {
-        tooltipEl.classList.remove('visible');
-        return;
-      }
-      const title = blockEl.getAttribute('data-tt-title') || '';
-      const sub = blockEl.getAttribute('data-tt-sub') || '';
-      const badge = blockEl.getAttribute('data-tt-badge') || '';
-
-      tooltipEl.innerHTML = `
-        <div class="tooltip-title">${escapeHtml(title)}</div>
-        <div class="tooltip-sub">${escapeHtml(sub)}</div>
-        <div class="tooltip-badge">${escapeHtml(badge)}</div>
-      `;
-      tooltipEl.classList.add('visible');
-    });
-
-    document.addEventListener('mousemove', (e) => {
-      if (!tooltipEl.classList.contains('visible')) return;
-      const pad = 14;
-      const rect = tooltipEl.getBoundingClientRect();
-      let left = e.clientX + pad;
-      let top = e.clientY + pad;
-
-      if (left + rect.width > window.innerWidth - 10) {
-        left = e.clientX - rect.width - pad;
-      }
-      if (top + rect.height > window.innerHeight - 10) {
-        top = e.clientY - rect.height - pad;
-      }
-
-      tooltipEl.style.left = `${Math.max(8, left)}px`;
-      tooltipEl.style.top = `${Math.max(8, top)}px`;
-    });
-
-    document.addEventListener('mouseout', (e) => {
-      if (!e.relatedTarget || !e.relatedTarget.closest('.sched-block')) {
-        tooltipEl.classList.remove('visible');
-      }
-    });
-
-    // Initial render
-    renderApp();
-  </script>
-</body>
-</html>
+      {"g":4,"d":"Wednesday","s":"1:5
