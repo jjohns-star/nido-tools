@@ -605,11 +605,11 @@
       position: absolute;
       top: 0;
       bottom: 0;
-      background-color: rgba(32, 42, 60, 0.055);
-      border-left: 1.5px dashed rgba(32, 42, 60, 0.32);
-      border-right: 1.5px dashed rgba(32, 42, 60, 0.32);
+      background-color: rgba(153, 27, 27, 0.04);
+      border-left: 2.5px dashed #991b1b;
+      border-right: 2.5px dashed #991b1b;
       pointer-events: none;
-      z-index: 2;
+      z-index: 4;
     }
 
     /* Individual Schedule Block Segments */
@@ -1041,7 +1041,6 @@
       {"g":1,"d":"Tuesday","s":"1:10","e":"1:50","b":"Math","r":"Math","t":"With Students"},
       {"g":1,"d":"Tuesday","s":"1:50","e":"2:30","b":"WINN","r":"WINN","t":"With Students"},
       {"g":1,"d":"Tuesday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
-      {"g":1,"d":"Wednesday","s":"7:30","e":"7:40","b":"Arrival","r":"Arrival","t":"No Students"},
       {"g":1,"d":"Wednesday","s":"7:40","e":"8:00","b":"Spanish Morning Meeting","r":"Spanish Morning Meeting","t":"With Students"},
       {"g":1,"d":"Wednesday","s":"8:00","e":"8:45","b":"Spanish","r":"Spanish","t":"No Students"},
       {"g":1,"d":"Wednesday","s":"8:50","e":"9:30","b":"Changemakers","r":"Changemakers","t":"With Students"},
@@ -1125,7 +1124,6 @@
       {"g":2,"d":"Thursday","s":"1:10","e":"1:50","b":"Changemakers","r":"Changemakers","t":"With Students"},
       {"g":2,"d":"Thursday","s":"1:50","e":"2:30","b":"WINN","r":"WINN","t":"With Students"},
       {"g":2,"d":"Thursday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
-      {"g":2,"d":"Friday","s":"7:30","e":"7:40","b":"Arrival","r":"Arrival","t":"No Students"},
       {"g":2,"d":"Friday","s":"7:40","e":"8:00","b":"Spanish Morning Meeting","r":"Spanish Morning Meeting","t":"With Students"},
       {"g":2,"d":"Friday","s":"8:00","e":"8:45","b":"Spanish","r":"Spanish","t":"No Students"},
       {"g":2,"d":"Friday","s":"8:50","e":"9:30","b":"Changemakers","r":"Changemakers","t":"With Students"},
@@ -1137,7 +1135,6 @@
       {"g":2,"d":"Friday","s":"12:45","e":"1:10","b":"Lunch","r":"Lunch","t":"No Students"},
       {"g":2,"d":"Friday","s":"1:10","e":"2:30","b":"ELA","r":"ELA","t":"With Students"},
       {"g":2,"d":"Friday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
-      {"g":3,"d":"Monday","s":"7:30","e":"7:40","b":"Arrival","r":"Arrival","t":"No Students"},
       {"g":3,"d":"Monday","s":"7:40","e":"8:00","b":"Spanish Morning Meeting","r":"Spanish Morning Meeting","t":"With Students"},
       {"g":3,"d":"Monday","s":"8:00","e":"8:45","b":"Spanish","r":"Spanish","t":"No Students"},
       {"g":3,"d":"Monday","s":"8:50","e":"9:20","b":"Changemakers","r":"Changemakers","t":"With Students"},
@@ -1231,7 +1228,6 @@
       {"g":4,"d":"Wednesday","s":"1:10","e":"1:50","b":"Changemakers","r":"Changemakers","t":"With Students"},
       {"g":4,"d":"Wednesday","s":"1:50","e":"2:30","b":"WINN","r":"WINN","t":"With Students"},
       {"g":4,"d":"Wednesday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
-      {"g":4,"d":"Thursday","s":"7:30","e":"7:40","b":"Arrival","r":"Arrival","t":"No Students"},
       {"g":4,"d":"Thursday","s":"7:40","e":"8:00","b":"Spanish Morning Meeting","r":"Spanish Morning Meeting","t":"With Students"},
       {"g":4,"d":"Thursday","s":"8:00","e":"8:45","b":"Spanish","r":"Spanish","t":"No Students"},
       {"g":4,"d":"Thursday","s":"8:50","e":"9:30","b":"Changemakers","r":"Changemakers","t":"With Students"},
@@ -1266,7 +1262,6 @@
       {"g":5,"d":"Monday","s":"1:10","e":"1:50","b":"ELA","r":"ELA","t":"With Students"},
       {"g":5,"d":"Monday","s":"1:50","e":"2:30","b":"WINN","r":"WINN","t":"With Students"},
       {"g":5,"d":"Monday","s":"2:30","e":"2:45","b":"Dismissal","r":"Dismissal","t":"No Students"},
-      {"g":5,"d":"Tuesday","s":"7:30","e":"7:40","b":"Arrival","r":"Arrival","t":"No Students"},
       {"g":5,"d":"Tuesday","s":"7:40","e":"8:00","b":"Spanish Morning Meeting","r":"Spanish Morning Meeting","t":"With Students"},
       {"g":5,"d":"Tuesday","s":"8:00","e":"8:45","b":"Spanish","r":"Spanish","t":"No Students"},
       {"g":5,"d":"Tuesday","s":"8:50","e":"9:30","b":"Changemakers","r":"Changemakers","t":"With Students"},
@@ -1337,7 +1332,7 @@
       { min: 885, label: '2:45' }
     ];
 
-    const EXCLUDED_TARGET_BLOCKS = new Set(['HR Time', 'Dismissal', 'Arrival']);
+    const EXCLUDED_TARGET_BLOCKS = new Set(['HR Time', 'Dismissal', 'Arrival', 'Lunch', 'Recess']);
 
     const TARGET_BLOCK_ORDER = [
       'ELA',
@@ -1348,9 +1343,7 @@
       'Spanish Morning Meeting',
       'Specials',
       'Spanish',
-      'Break',
-      'Lunch',
-      'Recess'
+      'Break'
     ];
 
     const COMPARE_BLOCKS_META = [
@@ -1532,7 +1525,7 @@
 
     /**
      * Returns ordered distinct target subject blocks for a given grade,
-     * strictly excluding HR Time, Dismissal, and Arrival.
+     * strictly excluding HR Time, Dismissal, Arrival, Lunch, and Recess.
      */
     function getValidTargetBlocksForGrade(grade) {
       const present = new Set(
@@ -2173,7 +2166,7 @@
           <div class="timeline-subheader">
             <span class="timeline-caption">SCHEDULE COMPARISON</span>
             <div class="legend-list">
-              <span class="legend-item"><span class="legend-swatch" style="background: rgba(32, 42, 60, 0.14); border: 1.5px dashed rgba(32, 42, 60, 0.45);"></span>Selected Window</span>
+              <span class="legend-item"><span class="legend-swatch" style="background: rgba(153, 27, 27, 0.08); border: 2px dashed #991b1b;"></span>Selected Window</span>
               <span class="legend-item"><span class="legend-swatch" style="background: var(--green-no-students);"></span>No Students</span>
               <span class="legend-item"><span class="legend-swatch" style="background: var(--slate-with-students);"></span>With Students</span>
               <span class="legend-item"><span class="legend-swatch" style="background: var(--meeting-bg); border-color: var(--meeting-border);"></span>Team Meeting / Planning</span>
