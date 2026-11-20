@@ -1019,17 +1019,6 @@
       .grade-label span.role-tag {
         font-size: 0.64rem;
       }
-      .target-window-guide {
-        background-color: rgba(153, 27, 27, 0.11);
-        border-left: 3.5px dashed #991b1b;
-        border-right: 3.5px dashed #991b1b;
-        box-shadow:
-          inset 3.5px 0 0 rgba(255, 255, 255, 0.88),
-          inset -3.5px 0 0 rgba(255, 255, 255, 0.88),
-          -1.5px 0 0 rgba(255, 255, 255, 0.88),
-          1.5px 0 0 rgba(255, 255, 255, 0.88);
-        z-index: 5;
-      }
     }
 
     /* Mobile & Touch Devices: Render each view mode as an individual oval pill */
@@ -1070,6 +1059,34 @@
         border-color: var(--navy-primary);
         color: #ffffff;
         box-shadow: none;
+      }
+      /* Keep target window dotted red lines clearly visible above green, blue, and yellow blocks */
+      .target-window-guide {
+        background-color: rgba(220, 38, 38, 0.09);
+        border-left: none;
+        border-right: none;
+        z-index: 10;
+      }
+      .target-window-guide::before,
+      .target-window-guide::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: repeating-linear-gradient(
+          to bottom,
+          #dc2626 0 4px,
+          rgba(255, 255, 255, 0.96) 4px 8px
+        );
+        box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.92);
+        pointer-events: none;
+      }
+      .target-window-guide::before {
+        left: -1.5px;
+      }
+      .target-window-guide::after {
+        right: -1.5px;
       }
     }
   </style>
@@ -1809,9 +1826,6 @@
                   .join('')}
               </div>
               <div class="presets-row">
-                <button type="button" class="preset-btn" data-action="target-select-all">
-                  <span>Select all</span>
-                </button>
                 <button type="button" class="preset-btn" data-action="target-unselect-all">
                   <span>Unselect all</span>
                 </button>
@@ -2563,11 +2577,6 @@
           } else {
             state.targetBlocks.add(subj);
           }
-          renderApp();
-          break;
-        }
-        case 'target-select-all': {
-          state.targetBlocks = new Set(getValidTargetBlocksForGrade(state.selectedGrade));
           renderApp();
           break;
         }
