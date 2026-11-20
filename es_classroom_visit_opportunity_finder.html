@@ -326,6 +326,45 @@
       border-color: #cfc2b4;
     }
 
+    .preset-btn.toggle-preset-btn.active {
+      background-color: var(--navy-primary);
+      border-color: var(--navy-primary);
+      color: #ffffff;
+    }
+
+    .preset-btn.toggle-preset-btn.active:hover {
+      background-color: #2b3850;
+      border-color: #2b3850;
+    }
+
+    .toggle-indicator {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      border: 1.5px solid var(--navy-primary);
+      background-color: transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      transition: background-color 0.14s ease, border-color 0.14s ease;
+    }
+
+    .preset-btn.toggle-preset-btn.active .toggle-indicator {
+      background-color: #ffffff;
+      border-color: #ffffff;
+    }
+
+    .preset-btn.toggle-preset-btn.active .toggle-indicator::after {
+      content: '';
+      width: 4px;
+      height: 7px;
+      border: solid var(--navy-primary);
+      border-width: 0 1.75px 1.75px 0;
+      transform: rotate(45deg) translate(-0.5px, -0.5px);
+    }
+
     /* Manual Time Inputs (Mode 2) */
     .time-inputs-wrap {
       display: flex;
@@ -1604,6 +1643,7 @@
       // Mode 1: By Instructional Block
       selectedGrade: 1,
       targetBlocks: new Set(['ELA']),
+      targetMultiSelect: false,
       selectedDays: new Set(DAYS),
       compareAgainst: new Set(['Break', 'Specials', 'Spanish', 'Recess', 'Lunch']),
       minOverlap: 15,
@@ -1826,6 +1866,15 @@
                   .join('')}
               </div>
               <div class="presets-row">
+                <button
+                  type="button"
+                  class="preset-btn toggle-preset-btn ${state.targetMultiSelect ? 'active' : ''}"
+                  aria-pressed="${state.targetMultiSelect}"
+                  data-action="toggle-target-multi"
+                >
+                  <span class="toggle-indicator" aria-hidden="true"></span>
+                  <span>Select Multiple</span>
+                </button>
                 <button type="button" class="preset-btn" data-action="target-unselect-all">
                   <span>Unselect all</span>
                 </button>
@@ -2572,10 +2621,23 @@
         }
         case 'select-target': {
           const subj = target.getAttribute('data-subject');
-          if (state.targetBlocks.has(subj)) {
-            state.targetBlocks.delete(subj);
+          if (state.targetMultiSelect) {
+            if (state.targetBlocks.has(subj)) {
+              state.targetBlocks.delete(subj);
+            } else {
+              state.targetBlocks.add(subj);
+            }
           } else {
-            state.targetBlocks.add(subj);
+            state.targetBlocks = new Set([subj]);
+          }
+          renderApp();
+          break;
+        }
+        case 'toggle-target-multi': {
+          state.targetMultiSelect = !state.targetMultiSelect;
+          if (!state.targetMultiSelect && state.targetBlocks.size > 1) {
+            const selectedList = [...state.targetBlocks];
+            state.targetBlocks = new Set([selectedList[selectedList.length - 1]]);
           }
           renderApp();
           break;
