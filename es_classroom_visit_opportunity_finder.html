@@ -1575,7 +1575,7 @@
 
       // Mode 1: By Instructional Block
       selectedGrade: 1,
-      targetBlock: 'ELA',
+      targetBlocks: new Set(['ELA']),
       selectedDays: new Set(DAYS),
       compareAgainst: new Set(['Break', 'Specials', 'Spanish', 'Recess', 'Lunch']),
       minOverlap: 15,
@@ -1747,9 +1747,9 @@
        ======================================================================== */
     function renderBlockMode() {
       const validTargets = getValidTargetBlocksForGrade(state.selectedGrade);
-      if (!validTargets.includes(state.targetBlock)) {
-        state.targetBlock = validTargets.includes('Math') ? 'Math' : validTargets[0];
-      }
+      state.targetBlocks = new Set(
+        [...state.targetBlocks].filter((subj) => validTargets.includes(subj))
+      );
 
       const allDaysSelected = state.selectedDays.size === DAYS.length;
 
@@ -1781,19 +1781,29 @@
               <div class="section-label">2. TARGET SUBJECT / BLOCK</div>
               <div class="pill-row">
                 ${validTargets
-                  .map(
-                    (subj) => `
+                  .map((subj) => {
+                    const isActive = state.targetBlocks.has(subj);
+                    return `
                       <button
                         type="button"
-                        class="pill ${state.targetBlock === subj ? 'active' : ''}"
+                        class="pill ${isActive ? 'active' : ''}"
+                        aria-pressed="${isActive}"
                         data-action="select-target"
                         data-subject="${escapeHtml(subj)}"
                       >
                         ${escapeHtml(subj)}
                       </button>
-                    `
-                  )
+                    `;
+                  })
                   .join('')}
+              </div>
+              <div class="presets-row">
+                <button type="button" class="preset-btn" data-action="target-select-all">
+                  <span>Select all</span>
+                </button>
+                <button type="button" class="preset-btn" data-action="target-unselect-all">
+                  <span>Unselect all</span>
+                </button>
               </div>
             </div>
 
@@ -1897,14 +1907,17 @@
       DAYS.forEach((day) => {
         if (!state.selectedDays.has(day)) return;
         const dayMatches = ENRICHED_SCHEDULE
-          .filter((item) => item.g === state.selectedGrade && item.d === day && item.b === state.targetBlock)
+          .filter((item) => item.g === state.selectedGrade && item.d === day && state.targetBlocks.has(item.b))
           .sort((a, b) => a.startMin - b.startMin);
         occurrences.push(...dayMatches);
       });
 
-      const resultsHtml = occurrences.length
-        ? occurrences.map((occ, idx) => renderOccurrenceCard(occ, idx)).join('')
-        : `<div class="card"><p class="no-matches-note">No blocks found for Grade ${state.selectedGrade} · ${escapeHtml(state.targetBlock)} on the selected day(s).</p></div>`;
+      const selectedTargetsLabel = [...state.targetBlocks].join(', ');
+      const resultsHtml = state.targetBlocks.size === 0
+        ? `<div class="card"><p class="no-matches-note">Select one or more options in Target Subject / Block above to view classroom visit opportunities.</p></div>`
+        : occurrences.length
+          ? occurrences.map((occ, idx) => renderOccurrenceCard(occ, idx)).join('')
+          : `<div class="card"><p class="no-matches-note">No blocks found for Grade ${state.selectedGrade} · ${escapeHtml(selectedTargetsLabel)} on the selected day(s).</p></div>`;
 
       return `${filterCardHtml}<div class="results-stack">${resultsHtml}</div>`;
     }
@@ -2533,7 +2546,22 @@
           break;
         }
         case 'select-target': {
-          state.targetBlock = target.getAttribute('data-subject');
+          const subj = target.getAttribute('data-subject');
+          if (state.targetBlocks.has(subj)) {
+            state.targetBlocks.delete(subj);
+          } else {
+            state.targetBlocks.add(subj);
+          }
+          renderApp();
+          break;
+        }
+        case 'target-select-all': {
+          state.targetBlocks = new Set(getValidTargetBlocksForGrade(state.selectedGrade));
+          renderApp();
+          break;
+        }
+        case 'target-unselect-all': {
+          state.targetBlocks = new Set();
           renderApp();
           break;
         }
