@@ -807,7 +807,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      flex-wrap: wrap;
+      gap: 8px 10px;
     }
 
     .dt-grade-block-item + .dt-grade-block-item {
@@ -853,9 +854,9 @@
     }
 
     .dt-status-pill {
-      font-size: 0.75rem;
+      font-size: 0.73rem;
       font-weight: 700;
-      padding: 4px 12px;
+      padding: 4px 10px;
       border-radius: 999px;
       white-space: nowrap;
       flex-shrink: 0;
@@ -987,6 +988,35 @@
       }
       .card {
         padding: 16px;
+      }
+      .timeline-scroll {
+        -webkit-overflow-scrolling: touch;
+      }
+      .timeline-axis-row,
+      .grade-row {
+        grid-template-columns: 84px 1fr;
+        gap: 0;
+      }
+      .timeline-axis-row > div:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 6;
+        background-color: var(--bg-surface);
+        align-self: stretch;
+      }
+      .grade-label {
+        position: sticky;
+        left: 0;
+        z-index: 6;
+        background-color: var(--bg-surface);
+        align-self: stretch;
+        justify-content: center;
+        padding-right: 10px;
+        font-size: 0.8rem;
+        box-shadow: 4px 0 8px -5px rgba(32, 42, 60, 0.16);
+      }
+      .grade-label span.role-tag {
+        font-size: 0.64rem;
       }
     }
   </style>
@@ -2167,6 +2197,7 @@
               .map((m) => {
                 const isNoStudents = m.block.t === 'No Students';
                 const pillClass = isNoStudents ? 'no-students' : 'with-students';
+                const pillLabel = isNoStudents ? 'HR without Students' : 'HR with Students';
                 const fullBlockHint =
                   m.block.startMin !== m.overlap.start || m.block.endMin !== m.overlap.end
                     ? `Full block: ${formatMinutes(m.block.startMin)} – ${formatMinutes(m.block.endMin)}`
@@ -2178,7 +2209,7 @@
                       ${m.block.m ? `<div class="dt-meeting-note">${escapeHtml(m.block.m)}</div>` : ''}
                       <div class="dt-block-meta">${formatMinutes(m.overlap.start)} – ${formatMinutes(m.overlap.end)} · ${m.overlap.mins} min</div>
                     </div>
-                    <span class="dt-status-pill ${pillClass}">${escapeHtml(m.block.t)}</span>
+                    <span class="dt-status-pill ${pillClass}">${pillLabel}</span>
                   </div>
                 `;
               })
@@ -2395,7 +2426,7 @@
               </div>
 
               <div class="timeline-subheader">
-                <span class="timeline-caption">FULL SCHOOL DAY TIMELINE </span>
+                <span class="timeline-caption">FULL SCHOOL DAY TIMELINE (7:30 AM – 2:45 PM)</span>
                 <div class="legend-list">
                   <span class="legend-item"><span class="legend-swatch" style="background: var(--green-no-students);"></span>HR without Students</span>
                   <span class="legend-item"><span class="legend-swatch" style="background: var(--slate-with-students);"></span>HR with Students</span>
