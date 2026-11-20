@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zoom-able Number Line</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #cbd5e1;
+      --text: #0f172a;
+      --muted: #64748b;
+      --line: #1e293b;
+      --accent: #2563eb;
+      --point-red: #8b0000;
+      --remove-red: #dc2626;
+      --hover-fill: rgba(37, 99, 235, 0.14);
+      --selected-fill: rgba(37, 99, 235, 0.22);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    /* Controls tucked flat into the bottom-right corner */
+    .bottom-right-controls {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 7px;
+      z-index: 20;
+    }
+
+    /* Top row: Reset / zoom utility box + compact number inputs */
+    .top-controls-row {
+      display: flex;
+      align-items: stretch;
+      justify-content: flex-end;
+      gap: 7px;
+    }
+
+    /* Compact number inputs */
+    .inputs-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 10px;
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.07);
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .field label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .field input[type="text"] {
+      width: 76px;
+      padding: 5px 7px;
+      font-size: 0.84rem;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .field.parts-field input[type="text"] {
+      width: 58px;
+    }
+
+    .field input[type="text"]:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .field input[type="text"].invalid {
+      border-color: #dc2626;
+      background: #fef2f2;
+    }
+
+    .field.point-field input[type="text"]:focus {
+      border-color: var(--point-red);
+    }
+
+    .input-with-clear {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .input-with-clear input[type="text"] {
+      padding-right: 22px;
+    }
+
+    .clear-input-btn {
+      position: absolute;
+      right: 4px;
+      padding: 2px 5px;
+      font-size: 0.88rem;
+      line-height: 1.1;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .clear-input-btn:hover {
+      color: var(--text);
+      background: #e2e8f0;
+    }
+
+    /* Reset & Zoom Out box on the top row */
+    .reset-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.07);
+    }
+
+    .action-btn {
+      min-height: 36px;
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text);
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .action-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .action-btn.zoom-out-btn {
+      color: #1d4ed8;
+      border-color: #bfdbfe;
+      background: #eff6ff;
+    }
+
+    .action-btn.zoom-out-btn:hover {
+      background: #dbeafe;
+    }
+
+    /* Bottom row: Line Click Mode box sitting flat against the bottom */
+    .mode-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.07);
+    }
+
+    .mode-box-title {
+      font-size: 0.64rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--muted);
+    }
+
+    .mode-toggle {
+      display: inline-flex;
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 3px;
+      gap: 3px;
+    }
+
+    .mode-btn {
+      min-height: 38px;
+      padding: 8px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .mode-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.65);
+    }
+
+    .mode-btn.active {
+      color: var(--text);
+      background: #ffffff;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.11);
+    }
+
+    .mode-btn[data-mode="plot-point"].active {
+      color: var(--point-red);
+    }
+
+    .mode-btn[data-mode="remove-point"].active {
+      color: var(--remove-red);
+    }
+
+    /* Full-viewport single number line stage */
+    .scroll-viewport {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 110px;
+      overflow: hidden;
+      cursor: grab;
+      user-select: none;
+      touch-action: pan-y;
+    }
+
+    .scroll-viewport.dragging {
+      cursor: grabbing;
+    }
+
+    .stage-svg {
+      display: block;
+      width: 100%;
+      height: 300px;
+    }
+
+    .section-hit {
+      fill: transparent;
+      cursor: pointer;
+      transition: fill 0.12s ease;
+    }
+
+    .section-hit:hover {
+      fill: var(--hover-fill);
+    }
+
+    .tick-hit {
+      fill: transparent;
+      cursor: pointer;
+      transition: fill 0.12s ease;
+    }
+
+    .tick-hit:hover {
+      fill: rgba(37, 99, 235, 0.16);
+    }
+
+    .tick-label-clickable {
+      cursor: pointer;
+    }
+
+    .tick-label-clickable .tick-label-bg {
+      fill: transparent;
+      transition: fill 0.12s ease;
+    }
+
+    .tick-label-clickable:hover .tick-label-bg {
+      fill: rgba(220, 38, 38, 0.1);
+    }
+
+    .tick-label-clickable:hover text {
+      opacity: 0.72;
+    }
+
+    .line-plot-hit {
+      fill: transparent;
+      cursor: crosshair;
+    }
+
+    .point-node {
+      cursor: pointer;
+    }
+
+    .point-node .point-halo {
+      opacity: 0;
+      transition: opacity 0.14s ease;
+    }
+
+    .point-node:hover .point-halo {
+      opacity: 0.24;
+    }
+
+    .point-node.remove-mode .point-remove-badge {
+      opacity: 0;
+      transition: opacity 0.14s ease;
+    }
+
+    .point-node.remove-mode:hover .point-halo {
+      opacity: 0.34;
+    }
+
+    .point-node.remove-mode:hover .point-remove-badge {
+      opacity: 1;
+    }
+
+    @media (max-width: 720px) {
+      .bottom-right-controls {
+        bottom: 6px;
+        right: 6px;
+        max-width: calc(100vw - 12px);
+      }
+      .top-controls-row {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      .inputs-box {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      .field input[type="text"] {
+        width: 66px;
+      }
+      .field.parts-field input[type="text"] {
+        width: 52px;
+      }
+      .mode-btn {
+        padding: 7px 9px;
+        font-size: 0.73rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <aside class="bottom-right-controls" aria-label="Number line controls">
+    <div class="top-controls-row">
+      <div class="reset-box">
+        <button id="resetBtn" class="action-btn" type="button">Reset</button>
+        <button id="zoomOutBtn" class="action-btn zoom-out-btn" type="button" hidden>Zoom Out</button>
+        <button id="centerBtn" class="action-btn" type="button" hidden>Center Zoom</button>
+      </div>
+
+      <div class="inputs-box">
+        <div class="field">
+          <label for="startInput">Starting Point</label>
+          <input id="startInput" type="text" inputmode="decimal" value="0" placeholder="0" />
+        </div>
+
+        <div class="field">
+          <label for="endInput">Ending Point</label>
+          <input id="endInput" type="text" inputmode="decimal" value="100" placeholder="100" />
+        </div>
+
+        <div class="field parts-field">
+          <label for="partsInput">Parts</label>
+          <input id="partsInput" type="text" inputmode="numeric" value="10" placeholder="10" />
+        </div>
+
+        <div class="field point-field">
+          <label for="pointInput">Point to Plot</label>
+          <div class="input-with-clear">
+            <input id="pointInput" type="text" inputmode="decimal" value="" placeholder="—" />
+            <button id="clearPointBtn" class="clear-input-btn" type="button" title="Clear point to plot" hidden>&times;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mode-box">
+      <span class="mode-box-title" id="modeGroupLabel">Line Click Mode</span>
+      <div class="mode-toggle" role="radiogroup" aria-labelledby="modeGroupLabel">
+        <button
+          type="button"
+          class="mode-btn active"
+          data-mode="plot-point"
+          role="radio"
+          aria-checked="true"
+        >
+          Plot Point
+        </button>
+        <button
+          type="button"
+          class="mode-btn"
+          data-mode="remove-point"
+          role="radio"
+          aria-checked="false"
+        >
+          Remove Point
+        </button>
+        <button
+          type="button"
+          class="mode-btn"
+          data-mode="label-tick"
+          role="radio"
+          aria-checked="false"
+        >
+          Label Tick Mark
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <main id="scrollViewport" class="scroll-viewport">
+    <svg id="stageSvg" class="stage-svg" role="img" aria-label="Zoom-able Number Line"></svg>
+  </main>
+
+  <script>
+    const startInput = document.getElementById("startInput");
+    const endInput = document.getElementById("endInput");
+    const partsInput = document.getElementById("partsInput");
+    const pointInput = document.getElementById("pointInput");
+    const clearPointBtn = document.getElementById("clearPointBtn");
+    const modeButtons = document.querySelectorAll(".mode-btn");
+    const resetBtn = document.getElementById("resetBtn");
+    const zoomOutBtn = document.getElementById("zoomOutBtn");
+    const centerBtn = document.getElementById("centerBtn");
+    const scrollViewport = document.getElementById("scrollViewport");
+    const stageSvg = document.getElementById("stageSvg");
+
+    const SVG_NS = "http://www.w3.org/2000/svg";
+    const AXIS_Y = 128;
+    const STAGE_HEIGHT = 300;
+    const MAX_SPAN_WIDTH = 900;
+
+    // Rich jewel-tone palette anchored by the original dark crimson (#8b0000) & royal purple (#5b21b6)
+    const POINT_PALETTE = [
+      "#8b0000", // Deep Crimson (original)
+      "#5b21b6", // Deep Royal Purple
+      "#0f766e", // Deep Emerald Teal
+      "#b45309", // Deep Burnt Amber
+      "#be185d", // Deep Mulberry Rose
+      "#1e40af", // Deep Cobalt Blue
+      "#15803d", // Deep Forest Green
+      "#9a3412", // Deep Terracotta
+      "#6d28d9", // Rich Violet
+      "#0369a1"  // Deep Cerulean
+    ];
+
+    // Default mode: 'plot-point' (first option)
+    let interactionMode = "plot-point";
+    let partitionCount = 10;
+
+    // Stack of zoom intervals on the single proportional number line:
+    // Each level: { start: number, end: number, labeledTicks: Set<number> }
+    let levels = [];
+    // Linear camera window mapped onto [spanLeftX, spanLeftX + spanWidth]
+    let camera = { start: 0, end: 100 };
+    let activeAnimationId = null;
+
+    // Plotted points: [{ id, value, color, showLabel }]
+    let plottedPoints = [];
+    let draftPoint = null;
+    let nextPointId = 1;
+    let colorCursor = 0;
+
+    function getNextPointColor() {
+      const color = POINT_PALETTE[colorCursor % POINT_PALETTE.length];
+      colorCursor += 1;
+      return color;
+    }
+
+    function getAllActivePoints() {
+      return draftPoint ? [...plottedPoints, draftPoint] : [...plottedPoints];
+    }
+
+    function cleanFloat(num) {
+      return Number(num.toPrecision(12));
+    }
+
+    function formatEndpoint(num) {
+      const cleaned = cleanFloat(num);
+      if (Math.abs(cleaned) > 0 && Math.abs(cleaned) < 1e-6) {
+        return cleaned.toFixed(10).replace(/\.?0+$/, "");
+      }
+      return String(cleaned);
+    }
+
+    function parseNumericInput(raw) {
+      const trimmed = raw.trim();
+      if (trimmed === "" || trimmed === "-" || trimmed === "." || trimmed === "-.") {
+        return null;
+      }
+      const value = Number(trimmed);
+      return Number.isFinite(value) ? value : null;
+    }
+
+    function parsePartsInput(raw) {
+      const trimmed = raw.trim();
+      if (!/^\d+$/.test(trimmed)) {
+        return null;
+      }
+      const value = Number(trimmed);
+      if (!Number.isInteger(value) || value < 2 || value > 100) {
+        return null;
+      }
+      return value;
+    }
+
+    function updateClearButtonVisibility() {
+      clearPointBtn.hidden = pointInput.value.trim() === "";
+    }
+
+    function commitDraftPoint() {
+      if (!draftPoint) return;
+      const existing = plottedPoints.find(
+        (pt) => Math.abs(pt.value - draftPoint.value) <= 1e-9
+      );
+      if (!existing) {
+        plottedPoints.push(draftPoint);
+      } else {
+        colorCursor = Math.max(0, colorCursor - 1);
+      }
+      draftPoint = null;
+      pointInput.value = "";
+      updateClearButtonVisibility();
+    }
+
+    // Geometry of the full-viewport SVG and the centered active interval span
+    function getViewportMetrics() {
+      const vw = Math.max(360, window.innerWidth || 1120);
+      const spanWidth = Math.min(MAX_SPAN_WIDTH, Math.max(280, vw - 220));
+      const spanLeftX = (vw - spanWidth) / 2;
+      return { vw, spanWidth, spanLeftX };
+    }
+
+    // Strictly proportional linear mapping from numerical value to screen X
+    function valueToX(val, cam = camera, metrics = getViewportMetrics()) {
+      const span = cam.end - cam.start;
+      if (span === 0) return metrics.spanLeftX;
+      return metrics.spanLeftX + ((val - cam.start) / span) * metrics.spanWidth;
+    }
+
+    // Inverse proportional mapping from screen X to numerical value
+    function xToValue(px, cam = camera, metrics = getViewportMetrics()) {
+      const span = cam.end - cam.start;
+      return cam.start + ((px - metrics.spanLeftX) / metrics.spanWidth) * span;
+    }
+
+    // Snap a clicked screen X to the finest visible grid (10 subdivisions per active section)
+    function xToSnappedValue(px, cam = camera, metrics = getViewportMetrics()) {
+      if (levels.length === 0) return 0;
+      const root = levels[0];
+      const active = levels[levels.length - 1];
+      const rawVal = xToValue(px, cam, metrics);
+      const clampedVal = Math.max(root.start, Math.min(root.end, rawVal));
+
+      const activeSpan = active.end - active.start;
+      const snapStep = activeSpan / (partitionCount * 10);
+      if (snapStep <= 0) return cleanFloat(clampedVal);
+
+      const snapped =
+        active.start + Math.round((clampedVal - active.start) / snapStep) * snapStep;
+      return cleanFloat(Math.max(root.start, Math.min(root.end, snapped)));
+    }
+
+    function isCameraOffCenter() {
+      if (levels.length === 0) return false;
+      const active = levels[levels.length - 1];
+      const tol = Math.abs(active.end - active.start) * 1e-4;
+      return (
+        Math.abs(camera.start - active.start) > tol ||
+        Math.abs(camera.end - active.end) > tol
+      );
+    }
+
+    function updateUtilityButtons() {
+      const hasZoom = levels.length > 1;
+      zoomOutBtn.hidden = !hasZoom;
+      centerBtn.hidden = !(hasZoom || isCameraOffCenter());
+    }
+
+    function handleTickClick(levelIndex, tickIndex) {
+      const level = levels[levelIndex];
+      if (!level) return;
+
+      // Keep root endpoints permanently labeled
+      if (levelIndex === 0 && (tickIndex === 0 || tickIndex === partitionCount)) {
+        return;
+      }
+
+      if (level.labeledTicks.has(tickIndex)) {
+        level.labeledTicks.delete(tickIndex);
+      } else {
+        level.labeledTicks.add(tickIndex);
+      }
+
+      if (activeAnimationId === null) {
+        renderFrame(camera, 1);
+      }
+    }
+
+    function handleLinePlotClick(px) {
+      if (draftPoint) {
+        commitDraftPoint();
+      }
+
+      const plottedValue = xToSnappedValue(px, camera);
+      const activeLevel = levels[levels.length - 1];
+      const span = Math.abs(activeLevel.end - activeLevel.start);
+      const tol = Math.max(1e-9, span * 1e-4);
+
+      const existing = plottedPoints.find((pt) => Math.abs(pt.value - plottedValue) <= tol);
+      if (existing) {
+        existing.showLabel = !existing.showLabel;
+      } else {
+        plottedPoints.push({
+          id: nextPointId++,
+          value: plottedValue,
+          color: getNextPointColor(),
+          showLabel: false
+        });
+      }
+
+      if (activeAnimationId === null) {
+        renderFrame(camera, 1);
+      }
+    }
+
+    function handlePointClick(pointId) {
+      if (interactionMode === "remove-point") {
+        handleRemovePoint(pointId);
+        return;
+      }
+
+      if (draftPoint && draftPoint.id === pointId) {
+        const target = draftPoint;
+        commitDraftPoint();
+        const committed = plottedPoints.find((pt) => pt.id === target.id);
+        if (committed) {
+          committed.showLabel = !committed.showLabel;
+        }
+      } else {
+        const pt = plottedPoints.find((item) => item.id === pointId);
+        if (pt) {
+          pt.showLabel = !pt.showLabel;
+        }
+      }
+
+      if (activeAnimationId === null) {
+        renderFrame(camera, 1);
+      }
+    }
+
+    function handleRemovePoint(pointId) {
+      if (draftPoint && draftPoint.id === pointId) {
+        draftPoint = null;
+        pointInput.value = "";
+        updateClearButtonVisibility();
+      } else {
+        plottedPoints = plottedPoints.filter((item) => item.id !== pointId);
+      }
+
+      if (plottedPoints.length === 0 && !draftPoint) {
+        colorCursor = 0;
+      }
+
+      if (activeAnimationId === null) {
+        renderFrame(camera, 1);
+      }
+    }
+
+    // Character-aware unit width (width per 1px of font size) for bold tabular numbers
+    function getLabelUnitWidth(text) {
+      let sum = 0;
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        if (ch === "." || ch === "-") {
+          sum += 0.40;
+        } else {
+          sum += 0.68;
+        }
+      }
+      return Math.max(0.68, sum);
+    }
+
+    // Compute a single uniform font size so all labels sit cleanly on one straight line
+    // with generous whitespace between adjacent numbers
+    function computeSingleLineFontSize(items, maxFontSize, minFontSize, minAbsGap, gapRatio) {
+      if (items.length <= 1) return maxFontSize;
+      let allowed = maxFontSize;
+      for (let i = 0; i < items.length - 1; i++) {
+        const left = items[i];
+        const right = items[i + 1];
+        const dist = right.tx - left.tx;
+        if (dist <= 0) {
+          allowed = minFontSize;
+          break;
+        }
+        const avgUnitW = (left.unitW + right.unitW) / 2;
+        const byRatio = dist / (avgUnitW + gapRatio);
+        const byAbsGap = (dist - minAbsGap) / avgUnitW;
+        allowed = Math.min(allowed, byRatio, byAbsGap);
+      }
+      return Math.max(minFontSize, Math.min(maxFontSize, allowed));
+    }
+
+    // Collect all visible ticks across the zoom levels on the single proportional line
+    function collectVisibleTicks(cam, metrics) {
+      const count = levels.length;
+      const tickMap = new Map();
+      const hasEvenMidpoint = partitionCount % 2 === 0;
+      const midpointTickIndex = hasEvenMidpoint ? partitionCount / 2 : -1;
+      const visibleLeft = -80;
+      const visibleRight = metrics.vw + 80;
+
+      for (let k = 0; k < count; k++) {
+        const level = levels[k];
+        const span = level.end - level.start;
+        const isDeepest = k === count - 1;
+        const stepPx = (Math.abs(span) / partitionCount) * (metrics.spanWidth / (cam.end - cam.start));
+
+        for (let t = 0; t <= partitionCount; t++) {
+          const val = cleanFloat(level.start + (t / partitionCount) * span);
+          const tx = valueToX(val, cam, metrics);
+          if (tx < visibleLeft || tx > visibleRight) continue;
+
+          const isRootEndpoint = k === 0 && (t === 0 || t === partitionCount);
+          const isActiveEndpoint = isDeepest && (t === 0 || t === partitionCount);
+          const isMidpoint = t === midpointTickIndex;
+          const isUserLabeled = level.labeledTicks.has(t);
+          const isInterior = t > 0 && t < partitionCount;
+
+          // Deduplicate ticks that share the exact same numerical coordinate
+          const key = Math.round(tx * 100);
+          const existing = tickMap.get(key);
+
+          if (!existing) {
+            tickMap.set(key, {
+              tx,
+              val,
+              highestLevel: k,
+              deepestLevel: k,
+              deepestTickIndex: t,
+              stepPx,
+              isRootEndpoint,
+              isActiveEndpoint,
+              isMidpoint,
+              isMidpointDeepest: isDeepest && isMidpoint,
+              isUserLabeled,
+              labelOwnerLevel: isUserLabeled ? k : null,
+              labelOwnerTick: isUserLabeled ? t : null,
+              isNewestSubTick: count > 1 && isDeepest && isInterior
+            });
+          } else {
+            existing.deepestLevel = k;
+            existing.deepestTickIndex = t;
+            existing.stepPx = Math.min(existing.stepPx, stepPx);
+            if (isRootEndpoint) existing.isRootEndpoint = true;
+            if (isActiveEndpoint) existing.isActiveEndpoint = true;
+            if (isMidpoint && k === 0) existing.isMidpoint = true;
+            if (isDeepest && isMidpoint) existing.isMidpointDeepest = true;
+            if (isUserLabeled) {
+              existing.isUserLabeled = true;
+              existing.labelOwnerLevel = k;
+              existing.labelOwnerTick = t;
+            }
+          }
+        }
+      }
+
+      return Array.from(tickMap.values()).sort((a, b) => a.tx - b.tx);
+    }
+
+    function renderFrame(cam = camera, newPartitionOpacity = 1) {
+      const count = levels.length;
+      if (count === 0) return;
+
+      const metrics = getViewportMetrics();
+      const root = levels[0];
+      const active = levels[count - 1];
+      const allPoints = getAllActivePoints();
+
+      stageSvg.setAttribute("width", metrics.vw);
+      stageSvg.setAttribute("height", STAGE_HEIGHT);
+      stageSvg.setAttribute("viewBox", `0 0 ${metrics.vw} ${STAGE_HEIGHT}`);
+      stageSvg.innerHTML = "";
+
+      const y = AXIS_Y;
+      const endpointMaxTickFontSize = 34;
+      const labeledMaxTickFontSize = 27;
+      const minTickFontSize = 8;
+      const maxPointFontSize = 21;
+      const minPointFontSize = 9;
+
+      const rootLeftX = valueToX(root.start, cam, metrics);
+      const rootRightX = valueToX(root.end, cam, metrics);
+
+      const rootSpan = root.end - root.start;
+      const minBound = Math.min(root.start, root.end);
+      const maxBound = Math.max(root.start, root.end);
+      const eps = Math.abs(rootSpan) * 1e-9;
+
+      const visiblePoints = allPoints
+        .filter((pt) => pt.value >= minBound - eps && pt.value <= maxBound + eps)
+        .map((pt) => ({
+          ...pt,
+          px: valueToX(pt.value, cam, metrics)
+        }))
+        .filter((pt) => pt.px >= -120 && pt.px <= metrics.vw + 120)
+        .sort((a, b) => a.px - b.px);
+
+      const visibleTicks = collectVisibleTicks(cam, metrics);
+      const activeSpan = Math.abs(active.end - active.start);
+      const tickTol = Math.max(1e-9, activeSpan * 1e-7);
+
+      // Map each tick to any plotted point sitting directly on it
+      const tickToPoint = new Map();
+      visibleTicks.forEach((tk) => {
+        const matchingPoints = visiblePoints.filter(
+          (pt) => Math.abs(pt.value - tk.val) <= tickTol
+        );
+        if (matchingPoints.length > 0) {
+          const labeledMatch = matchingPoints.find((pt) => pt.showLabel);
+          tickToPoint.set(tk, labeledMatch || matchingPoints[0]);
+        }
+      });
+
+      const pointsRenderedAtTickMark = new Set();
+
+      const group = document.createElementNS(SVG_NS, "g");
+
+      // A. Clickable sections across the single proportional line
+      for (let k = 0; k < count; k++) {
+        const level = levels[k];
+        const span = level.end - level.start;
+        const isDeepest = k === count - 1;
+        const child = !isDeepest ? levels[k + 1] : null;
+
+        for (let s = 0; s < partitionCount; s++) {
+          const secStart = cleanFloat(level.start + (s / partitionCount) * span);
+          const secEnd = cleanFloat(level.start + ((s + 1) / partitionCount) * span);
+
+          // Skip the parent section that is already expanded into child level k + 1
+          if (
+            !isDeepest &&
+            Math.abs(secStart - child.start) <= Math.abs(span) * 1e-9 &&
+            Math.abs(secEnd - child.end) <= Math.abs(span) * 1e-9
+          ) {
+            continue;
+          }
+
+          const sx1 = valueToX(secStart, cam, metrics);
+          const sx2 = valueToX(secEnd, cam, metrics);
+          if (sx2 < -40 || sx1 > metrics.vw + 40) continue;
+
+          const clampedLeft = Math.max(-40, sx1);
+          const clampedRight = Math.min(metrics.vw + 40, sx2);
+          const sw = clampedRight - clampedLeft;
+          if (sw <= 1) continue;
+
+          const rect = document.createElementNS(SVG_NS, "rect");
+          rect.setAttribute("x", clampedLeft);
+          rect.setAttribute("y", y - 26);
+          rect.setAttribute("width", sw);
+          rect.setAttribute("height", 52);
+          rect.setAttribute("rx", 4);
+          rect.setAttribute("class", "section-hit");
+          rect.addEventListener("click", (e) => {
+            e.stopPropagation();
+            handleSectionClick(k, s);
+          });
+          group.appendChild(rect);
+        }
+      }
+
+      // B. Single continuous horizontal axis with arrows at the true root endpoints
+      const arrowExtension = 36;
+      const arrowHeadLen = 13;
+      const arrowHeadHalfH = 7.5;
+      const leftTipX = rootLeftX - arrowExtension;
+      const rightTipX = rootRightX + arrowExtension;
+
+      const visibleAxisStart = Math.max(-20, leftTipX);
+      const visibleAxisEnd = Math.min(metrics.vw + 20, rightTipX);
+
+      if (visibleAxisEnd > visibleAxisStart) {
+        const axis = document.createElementNS(SVG_NS, "line");
+        axis.setAttribute("x1", visibleAxisStart);
+        axis.setAttribute("y1", y);
+        axis.setAttribute("x2", visibleAxisEnd);
+        axis.setAttribute("y2", y);
+        axis.setAttribute("stroke", "#1e293b");
+        axis.setAttribute("stroke-width", "3");
+        axis.setAttribute("stroke-linecap", "round");
+        axis.style.pointerEvents = "none";
+        group.appendChild(axis);
+      }
+
+      if (leftTipX >= -25 && leftTipX <= metrics.vw + 25) {
+        const leftArrow = document.createElementNS(SVG_NS, "polyline");
+        leftArrow.setAttribute(
+          "points",
+          `${leftTipX + arrowHeadLen},${y - arrowHeadHalfH} ${leftTipX},${y} ${leftTipX + arrowHeadLen},${y + arrowHeadHalfH}`
+        );
+        leftArrow.setAttribute("fill", "none");
+        leftArrow.setAttribute("stroke", "#1e293b");
+        leftArrow.setAttribute("stroke-width", "3");
+        leftArrow.setAttribute("stroke-linecap", "round");
+        leftArrow.setAttribute("stroke-linejoin", "round");
+        leftArrow.style.pointerEvents = "none";
+        group.appendChild(leftArrow);
+      }
+
+      if (rightTipX >= -25 && rightTipX <= metrics.vw + 25) {
+        const rightArrow = document.createElementNS(SVG_NS, "polyline");
+        rightArrow.setAttribute(
+          "points",
+          `${rightTipX - arrowHeadLen},${y - arrowHeadHalfH} ${rightTipX},${y} ${rightTipX - arrowHeadLen},${y + arrowHeadHalfH}`
+        );
+        rightArrow.setAttribute("fill", "none");
+        rightArrow.setAttribute("stroke", "#1e293b");
+        rightArrow.setAttribute("stroke-width", "3");
+        rightArrow.setAttribute("stroke-linecap", "round");
+        rightArrow.setAttribute("stroke-linejoin", "round");
+        rightArrow.style.pointerEvents = "none";
+        group.appendChild(rightArrow);
+      }
+
+      // C. Tick marks along the single proportional line
+      visibleTicks.forEach((tk) => {
+        let halfHeight;
+        let strokeWidth;
+
+        if ((tk.isMidpoint && tk.highestLevel === 0) || tk.isMidpointDeepest) {
+          halfHeight = 30;
+          strokeWidth = 5.5;
+        } else if (tk.isActiveEndpoint || tk.isRootEndpoint) {
+          halfHeight = 16;
+          strokeWidth = 3;
+        } else if (tk.highestLevel < count - 1) {
+          halfHeight = 18;
+          strokeWidth = 3;
+        } else {
+          halfHeight = 15;
+          strokeWidth = 2.6;
+        }
+
+        const tick = document.createElementNS(SVG_NS, "line");
+        tick.setAttribute("x1", tk.tx);
+        tick.setAttribute("x2", tk.tx);
+        tick.setAttribute("y1", y - halfHeight);
+        tick.setAttribute("y2", y + halfHeight);
+        tick.setAttribute("stroke", "#0f172a");
+        tick.setAttribute("stroke-width", String(strokeWidth));
+        tick.setAttribute("stroke-linecap", "round");
+        if (tk.isNewestSubTick) {
+          tick.setAttribute("opacity", String(newPartitionOpacity));
+        }
+        tick.style.pointerEvents = "none";
+        group.appendChild(tick);
+      });
+
+      // D. Single-row below-line tick labels:
+      // Dynamically adjust uniform font size so all labeled ticks fit on ONE straight horizontal line
+      // with generous white space between adjacent numbers.
+      const labeledTickItems = visibleTicks
+        .filter((tk) => tk.isActiveEndpoint || tk.isRootEndpoint || tk.isUserLabeled)
+        .map((tk) => {
+          const text = formatEndpoint(tk.val);
+          return {
+            tk,
+            tx: tk.tx,
+            text,
+            unitW: getLabelUnitWidth(text),
+            isRemovable: !(tk.isActiveEndpoint || tk.isRootEndpoint) && tk.isUserLabeled
+          };
+        })
+        .sort((a, b) => a.tx - b.tx);
+
+      const onScreenTickLabels = labeledTickItems.filter(
+        (item) => item.tx >= -20 && item.tx <= metrics.vw + 20
+      );
+
+      const hasInteriorTickLabels = onScreenTickLabels.some((item) => item.isRemovable);
+      const effectiveMaxTickFontSize = hasInteriorTickLabels
+        ? labeledMaxTickFontSize
+        : endpointMaxTickFontSize;
+
+      const tickLabelFontSize = computeSingleLineFontSize(
+        onScreenTickLabels,
+        effectiveMaxTickFontSize,
+        minTickFontSize,
+        24,
+        1.15
+      );
+
+      // Anchor the visual top of the tick labels consistently below the tick marks
+      const labelTopY = y + 38;
+      const tickLabelBaselineY = labelTopY + tickLabelFontSize * 0.72;
+
+      labeledTickItems.forEach((item) => {
+        const { tk, text, isRemovable } = item;
+        const ptOnTick = tickToPoint.get(tk);
+        const usePointColor = Boolean(ptOnTick && ptOnTick.showLabel);
+        if (usePointColor) {
+          pointsRenderedAtTickMark.add(ptOnTick.id);
+        }
+
+        const labelFill = usePointColor ? ptOnTick.color : "#0f172a";
+
+        if (isRemovable) {
+          const tickLabelGroup = document.createElementNS(SVG_NS, "g");
+          tickLabelGroup.setAttribute("class", "tick-label-clickable");
+
+          const titleEl = document.createElementNS(SVG_NS, "title");
+          titleEl.textContent = "Click to remove label";
+          tickLabelGroup.appendChild(titleEl);
+
+          const rawTextWidth = item.unitW * tickLabelFontSize + Math.max(8, tickLabelFontSize * 0.35);
+          const labelHitRect = document.createElementNS(SVG_NS, "rect");
+          labelHitRect.setAttribute("x", tk.tx - rawTextWidth / 2);
+          labelHitRect.setAttribute("y", tickLabelBaselineY - tickLabelFontSize * 0.85);
+          labelHitRect.setAttribute("width", rawTextWidth);
+          labelHitRect.setAttribute("height", tickLabelFontSize * 1.12);
+          labelHitRect.setAttribute("rx", Math.max(4, tickLabelFontSize * 0.18));
+          labelHitRect.setAttribute("class", "tick-label-bg");
+          tickLabelGroup.appendChild(labelHitRect);
+
+          const tickLabel = document.createElementNS(SVG_NS, "text");
+          tickLabel.setAttribute("x", tk.tx);
+          tickLabel.setAttribute("y", tickLabelBaselineY);
+          tickLabel.setAttribute("text-anchor", "middle");
+          tickLabel.setAttribute("font-size", String(tickLabelFontSize));
+          tickLabel.setAttribute("font-weight", "700");
+          tickLabel.setAttribute("fill", labelFill);
+          tickLabel.textContent = text;
+          tickLabelGroup.appendChild(tickLabel);
+
+          tickLabelGroup.addEventListener("click", (e) => {
+            e.stopPropagation();
+            handleTickClick(tk.labelOwnerLevel, tk.labelOwnerTick);
+          });
+
+          group.appendChild(tickLabelGroup);
+        } else {
+          const tickLabel = document.createElementNS(SVG_NS, "text");
+          tickLabel.setAttribute("x", tk.tx);
+          tickLabel.setAttribute("y", tickLabelBaselineY);
+          tickLabel.setAttribute("text-anchor", "middle");
+          tickLabel.setAttribute("font-size", String(tickLabelFontSize));
+          tickLabel.setAttribute("font-weight", "700");
+          tickLabel.setAttribute("fill", labelFill);
+          if (tk.isActiveEndpoint && !tk.isRootEndpoint && count > 1) {
+            tickLabel.setAttribute("opacity", String(newPartitionOpacity));
+          }
+          tickLabel.style.pointerEvents = "none";
+          tickLabel.textContent = text;
+          group.appendChild(tickLabel);
+        }
+      });
+
+      // E. Mode-specific interactive overlays
+      if (interactionMode === "label-tick") {
+        visibleTicks.forEach((tk) => {
+          if (tk.isRootEndpoint || tk.isActiveEndpoint) return;
+          const hitW = Math.min(24, Math.max(12, tk.stepPx * 0.68));
+          const hitHalfH = tk.isMidpoint || tk.isMidpointDeepest ? 34 : 20;
+
+          const tickHit = document.createElementNS(SVG_NS, "rect");
+          tickHit.setAttribute("x", tk.tx - hitW / 2);
+          tickHit.setAttribute("y", y - hitHalfH);
+          tickHit.setAttribute("width", hitW);
+          tickHit.setAttribute("height", hitHalfH * 2);
+          tickHit.setAttribute("rx", 6);
+          tickHit.setAttribute("class", "tick-hit");
+          tickHit.addEventListener("click", (e) => {
+            e.stopPropagation();
+            handleTickClick(tk.deepestLevel, tk.deepestTickIndex);
+          });
+          group.appendChild(tickHit);
+        });
+      } else if (interactionMode === "plot-point") {
+        const nextPreviewColor = POINT_PALETTE[colorCursor % POINT_PALETTE.length];
+        const previewDot = document.createElementNS(SVG_NS, "circle");
+        previewDot.setAttribute("cy", y);
+        previewDot.setAttribute("r", "7.5");
+        previewDot.setAttribute("fill", nextPreviewColor);
+        previewDot.setAttribute("fill-opacity", "0.45");
+        previewDot.setAttribute("stroke", "#ffffff");
+        previewDot.setAttribute("stroke-width", "1.5");
+        previewDot.setAttribute("visibility", "hidden");
+        previewDot.style.pointerEvents = "none";
+        group.appendChild(previewDot);
+
+        const hitStart = Math.max(0, rootLeftX - 8);
+        const hitEnd = Math.min(metrics.vw, rootRightX + 8);
+        if (hitEnd > hitStart) {
+          const lineHit = document.createElementNS(SVG_NS, "rect");
+          lineHit.setAttribute("x", hitStart);
+          lineHit.setAttribute("y", y - 13);
+          lineHit.setAttribute("width", hitEnd - hitStart);
+          lineHit.setAttribute("height", 26);
+          lineHit.setAttribute("rx", 6);
+          lineHit.setAttribute("class", "line-plot-hit");
+
+          function getSnappedXFromMouseEvent(e) {
+            const pt = stageSvg.createSVGPoint();
+            pt.x = e.clientX;
+            pt.y = e.clientY;
+            const svgPt = pt.matrixTransform(stageSvg.getScreenCTM().inverse());
+            const snappedVal = xToSnappedValue(svgPt.x, cam, metrics);
+            return {
+              px: valueToX(snappedVal, cam, metrics)
+            };
+          }
+
+          lineHit.addEventListener("mousemove", (e) => {
+            const { px } = getSnappedXFromMouseEvent(e);
+            previewDot.setAttribute("cx", px);
+            previewDot.setAttribute("visibility", "visible");
+          });
+
+          lineHit.addEventListener("mouseleave", () => {
+            previewDot.setAttribute("visibility", "hidden");
+          });
+
+          lineHit.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const pt = stageSvg.createSVGPoint();
+            pt.x = e.clientX;
+            pt.y = e.clientY;
+            const svgPt = pt.matrixTransform(stageSvg.getScreenCTM().inverse());
+            handleLinePlotClick(svgPt.x);
+          });
+
+          group.appendChild(lineHit);
+        }
+      }
+
+      // F. Plotted points + single-row above-line labels with automatic font-size fitting
+      const isRemoveMode = interactionMode === "remove-point";
+
+      visiblePoints.forEach((pt) => {
+        const pointGroup = document.createElementNS(SVG_NS, "g");
+        pointGroup.setAttribute(
+          "class",
+          isRemoveMode ? "point-node remove-mode" : "point-node"
+        );
+
+        const halo = document.createElementNS(SVG_NS, "circle");
+        halo.setAttribute("cx", pt.px);
+        halo.setAttribute("cy", y);
+        halo.setAttribute("r", "16");
+        halo.setAttribute("fill", isRemoveMode ? "#dc2626" : pt.color);
+        halo.setAttribute("class", "point-halo");
+        pointGroup.appendChild(halo);
+
+        const dot = document.createElementNS(SVG_NS, "circle");
+        dot.setAttribute("cx", pt.px);
+        dot.setAttribute("cy", y);
+        dot.setAttribute("r", "8.5");
+        dot.setAttribute("fill", pt.color);
+        dot.setAttribute("stroke", "#ffffff");
+        dot.setAttribute("stroke-width", "2.2");
+        pointGroup.appendChild(dot);
+
+        if (isRemoveMode) {
+          const badgeG = document.createElementNS(SVG_NS, "g");
+          badgeG.setAttribute("class", "point-remove-badge");
+          badgeG.style.pointerEvents = "none";
+
+          const bx = pt.px + 8.5;
+          const by = y - 8.5;
+
+          const badgeCircle = document.createElementNS(SVG_NS, "circle");
+          badgeCircle.setAttribute("cx", bx);
+          badgeCircle.setAttribute("cy", by);
+          badgeCircle.setAttribute("r", "6.5");
+          badgeCircle.setAttribute("fill", "#dc2626");
+          badgeCircle.setAttribute("stroke", "#ffffff");
+          badgeCircle.setAttribute("stroke-width", "1.4");
+          badgeG.appendChild(badgeCircle);
+
+          const badgeText = document.createElementNS(SVG_NS, "text");
+          badgeText.setAttribute("x", bx);
+          badgeText.setAttribute("y", by + 3.2);
+          badgeText.setAttribute("text-anchor", "middle");
+          badgeText.setAttribute("font-size", "10");
+          badgeText.setAttribute("font-weight", "800");
+          badgeText.setAttribute("fill", "#ffffff");
+          badgeText.textContent = "×";
+          badgeG.appendChild(badgeText);
+
+          pointGroup.appendChild(badgeG);
+        }
+
+        const hitTarget = document.createElementNS(SVG_NS, "circle");
+        hitTarget.setAttribute("cx", pt.px);
+        hitTarget.setAttribute("cy", y);
+        hitTarget.setAttribute("r", isRemoveMode ? "19" : "17");
+        hitTarget.setAttribute("fill", "transparent");
+        pointGroup.appendChild(hitTarget);
+
+        pointGroup.addEventListener("click", (e) => {
+          e.stopPropagation();
+          handlePointClick(pt.id);
+        });
+
+        group.appendChild(pointGroup);
+      });
+
+      const abovePointItems = visiblePoints
+        .filter((pt) => pt.showLabel && !pointsRenderedAtTickMark.has(pt.id))
+        .map((pt) => {
+          const text = formatEndpoint(pt.value);
+          return {
+            pt,
+            tx: pt.px,
+            text,
+            unitW: getLabelUnitWidth(text)
+          };
+        })
+        .sort((a, b) => a.tx - b.tx);
+
+      if (abovePointItems.length > 0) {
+        const pointLabelFontSize = computeSingleLineFontSize(
+          abovePointItems,
+          maxPointFontSize,
+          minPointFontSize,
+          18,
+          0.85
+        );
+        const pointLabelBaselineY = y - 36;
+
+        abovePointItems.forEach(({ pt, text }) => {
+          const pointLabel = document.createElementNS(SVG_NS, "text");
+          pointLabel.setAttribute("x", pt.px);
+          pointLabel.setAttribute("y", pointLabelBaselineY);
+          pointLabel.setAttribute("text-anchor", "middle");
+          pointLabel.setAttribute("font-size", String(pointLabelFontSize));
+          pointLabel.setAttribute("font-weight", "800");
+          pointLabel.setAttribute("fill", pt.color);
+          pointLabel.setAttribute("stroke", "#f8fafc");
+          pointLabel.setAttribute("stroke-width", "4");
+          pointLabel.setAttribute("paint-order", "stroke");
+          pointLabel.setAttribute("stroke-linejoin", "round");
+          pointLabel.style.pointerEvents = "none";
+          pointLabel.textContent = text;
+          group.appendChild(pointLabel);
+        });
+      }
+
+      stageSvg.appendChild(group);
+    }
+
+    function animateCameraTo(targetCam, duration = 620, fadeNewPartitions = false) {
+      if (activeAnimationId !== null) {
+        cancelAnimationFrame(activeAnimationId);
+        activeAnimationId = null;
+      }
+
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefersReducedMotion) {
+        camera = { start: targetCam.start, end: targetCam.end };
+        renderFrame(camera, 1);
+        updateUtilityButtons();
+        return;
+      }
+
+      const startCam = { start: camera.start, end: camera.end };
+      const startSpan = startCam.end - startCam.start;
+      const endSpan = targetCam.end - targetCam.start;
+      const startTime = performance.now();
+
+      function step(now) {
+        const elapsed = now - startTime;
+        const rawProgress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - rawProgress, 3);
+
+        let currentStart;
+        let currentEnd;
+
+        if (
+          startSpan > 0 &&
+          endSpan > 0 &&
+          Math.abs(endSpan - startSpan) > Math.max(startSpan, endSpan) * 1e-6
+        ) {
+          // Geometric scale interpolation for smooth optical zoom without overshoot
+          const currentSpan = startSpan * Math.pow(endSpan / startSpan, eased);
+          const u = (currentSpan - startSpan) / (endSpan - startSpan);
+          currentStart = startCam.start + (targetCam.start - startCam.start) * u;
+          currentEnd = currentStart + currentSpan;
+        } else {
+          currentStart = startCam.start + (targetCam.start - startCam.start) * eased;
+          currentEnd = startCam.end + (targetCam.end - startCam.end) * eased;
+        }
+
+        camera = { start: currentStart, end: currentEnd };
+        const partitionOpacity = fadeNewPartitions ? Math.min(1, eased * 1.45) : 1;
+        renderFrame(camera, partitionOpacity);
+
+        if (rawProgress < 1) {
+          activeAnimationId = requestAnimationFrame(step);
+        } else {
+          camera = { start: targetCam.start, end: targetCam.end };
+          renderFrame(camera, 1);
+          updateUtilityButtons();
+          activeAnimationId = null;
+        }
+      }
+
+      activeAnimationId = requestAnimationFrame(step);
+    }
+
+    function setInteractionMode(newMode) {
+      interactionMode = newMode;
+      modeButtons.forEach((btn) => {
+        const isActive = btn.dataset.mode === newMode;
+        btn.classList.toggle("active", isActive);
+        btn.setAttribute("aria-checked", String(isActive));
+      });
+      if (levels.length > 0 && activeAnimationId === null) {
+        renderFrame(camera, 1);
+      }
+    }
+
+    function updateFromInputs(clearAllPoints = false) {
+      if (activeAnimationId !== null) {
+        cancelAnimationFrame(activeAnimationId);
+        activeAnimationId = null;
+      }
+
+      const start = parseNumericInput(startInput.value);
+      const end = parseNumericInput(endInput.value);
+      const parsedParts = parsePartsInput(partsInput.value);
+      const endTooSmallOrEqual = start !== null && end !== null && end <= start;
+
+      startInput.classList.toggle("invalid", start === null);
+      endInput.classList.toggle("invalid", end === null || endTooSmallOrEqual);
+      partsInput.classList.toggle("invalid", parsedParts === null);
+
+      if (endTooSmallOrEqual) {
+        endInput.title = "Ending point must be greater than starting point";
+      } else {
+        endInput.removeAttribute("title");
+      }
+
+      if (parsedParts === null) {
+        partsInput.title = "Enter a whole number of parts from 2 to 100";
+      } else {
+        partsInput.removeAttribute("title");
+      }
+
+      if (start === null || end === null || endTooSmallOrEqual || parsedParts === null) {
+        return;
+      }
+
+      partitionCount = parsedParts;
+
+      if (clearAllPoints) {
+        plottedPoints = [];
+        draftPoint = null;
+        pointInput.value = "";
+        colorCursor = 0;
+      }
+
+      levels = [
+        {
+          start,
+          end,
+          labeledTicks: new Set()
+        }
+      ];
+      camera = { start, end };
+      updateClearButtonVisibility();
+      renderFrame(camera, 1);
+      updateUtilityButtons();
+    }
+
+    function handlePointInput() {
+      updateClearButtonVisibility();
+      const val = parseNumericInput(pointInput.value);
+
+      if (val === null) {
+        if (draftPoint) {
+          draftPoint = null;
+          colorCursor = Math.max(0, colorCursor - 1);
+        }
+      } else {
+        const cleanedVal = cleanFloat(val);
+        if (draftPoint) {
+          draftPoint.value = cleanedVal;
+        } else {
+          draftPoint = {
+            id: nextPointId++,
+            value: cleanedVal,
+            color: getNextPointColor(),
+            showLabel: false
+          };
+        }
+      }
+
+      if (levels.length > 0 && activeAnimationId === null) {
+        renderFrame(camera, 1);
+      }
+    }
+
+    // Proportionally zoom into and partition a section directly on the original line
+    function handleSectionClick(levelIndex, sectionIndex) {
+      const current = levels[levelIndex];
+      if (!current) return;
+
+      const step = (current.end - current.start) / partitionCount;
+      const newStart = cleanFloat(current.start + sectionIndex * step);
+      const newEnd = cleanFloat(current.start + (sectionIndex + 1) * step);
+
+      levels = levels.slice(0, levelIndex + 1);
+      levels.push({
+        start: newStart,
+        end: newEnd,
+        labeledTicks: new Set()
+      });
+
+      updateUtilityButtons();
+      animateCameraTo({ start: newStart, end: newEnd }, 620, true);
+    }
+
+    // Zoom back out one level on the single line while preserving all plotted points
+    function handleZoomOut() {
+      if (levels.length <= 1) return;
+
+      if (draftPoint) {
+        commitDraftPoint();
+      }
+
+      levels.pop();
+      const parent = levels[levels.length - 1];
+      updateUtilityButtons();
+      animateCameraTo({ start: parent.start, end: parent.end }, 540, false);
+    }
+
+    // Click-and-drag horizontal panning along the single proportional line
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartCam = null;
+
+    scrollViewport.addEventListener("mousedown", (e) => {
+      const cls = e.target.classList;
+      if (
+        (cls &&
+          (cls.contains("section-hit") ||
+            cls.contains("tick-hit") ||
+            cls.contains("line-plot-hit"))) ||
+        e.target.closest(".point-node") ||
+        e.target.closest(".tick-label-clickable")
+      ) {
+        return;
+      }
+      if (activeAnimationId !== null) {
+        cancelAnimationFrame(activeAnimationId);
+        activeAnimationId = null;
+      }
+      isDragging = true;
+      dragStartX = e.pageX;
+      dragStartCam = { start: camera.start, end: camera.end };
+      scrollViewport.classList.add("dragging");
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      if (!isDragging || !dragStartCam || levels.length === 0) return;
+      const metrics = getViewportMetrics();
+      const span = dragStartCam.end - dragStartCam.start;
+      const dx = e.pageX - dragStartX;
+      const deltaVal = (dx / metrics.spanWidth) * span;
+
+      const root = levels[0];
+      let nextStart = dragStartCam.start - deltaVal;
+      let nextEnd = dragStartCam.end - deltaVal;
+
+      // Keep at least part of the root interval reachable in view
+      const minAllowedStart = root.start - span * 0.5;
+      const maxAllowedEnd = root.end + span * 0.5;
+      if (nextStart < minAllowedStart) {
+        nextStart = minAllowedStart;
+        nextEnd = nextStart + span;
+      }
+      if (nextEnd > maxAllowedEnd) {
+        nextEnd = maxAllowedEnd;
+        nextStart = nextEnd - span;
+      }
+
+      camera = { start: nextStart, end: nextEnd };
+      renderFrame(camera, 1);
+      updateUtilityButtons();
+    });
+
+    window.addEventListener("mouseup", () => {
+      if (!isDragging) return;
+      isDragging = false;
+      dragStartCam = null;
+      scrollViewport.classList.remove("dragging");
+    });
+
+    window.addEventListener("resize", () => {
+      if (levels.length > 0 && activeAnimationId === null) {
+        renderFrame(camera, 1);
+      }
+    });
+
+    modeButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        setInteractionMode(btn.dataset.mode);
+      });
+    });
+
+    clearPointBtn.addEventListener("click", () => {
+      pointInput.value = "";
+      handlePointInput();
+      pointInput.focus();
+    });
+
+    zoomOutBtn.addEventListener("click", handleZoomOut);
+
+    centerBtn.addEventListener("click", () => {
+      if (levels.length === 0) return;
+      const active = levels[levels.length - 1];
+      animateCameraTo({ start: active.start, end: active.end }, 420, false);
+    });
+
+    startInput.addEventListener("input", () => updateFromInputs(false));
+    endInput.addEventListener("input", () => updateFromInputs(false));
+    partsInput.addEventListener("input", () => updateFromInputs(false));
+    pointInput.addEventListener("input", handlePointInput);
+    pointInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        commitDraftPoint();
+        if (levels.length > 0 && activeAnimationId === null) {
+          renderFrame(camera, 1);
+        }
+      }
+    });
+    pointInput.addEventListener("blur", () => {
+      if (draftPoint) {
+        commitDraftPoint();
+        if (levels.length > 0 && activeAnimationId === null) {
+          renderFrame(camera, 1);
+        }
+      }
+    });
+
+    resetBtn.addEventListener("click", () => updateFromInputs(true));
+
+    // Initialize on load
+    updateFromInputs(true);
+  </script>
+</body>
+</html>
