@@ -116,7 +116,7 @@
       align-items: center;
       gap: 4px;
       border: 1px solid var(--border-hairline);
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
     }
 
     .mode-btn {
@@ -989,29 +989,7 @@
       .card {
         padding: 16px;
       }
-      .mode-switcher {
-        background-color: transparent;
-        border: none;
-        padding: 0;
-        border-radius: 0;
-        gap: 8px;
-        width: 100%;
-      }
-      .mode-btn {
-        background-color: var(--pill-bg);
-        border: 1px solid var(--border-hairline);
-        padding: 7px 15px;
-        font-size: 0.84rem;
-      }
-      .mode-btn:hover:not(.active) {
-        background-color: var(--pill-hover);
-      }
-      .mode-btn.active {
-        background-color: var(--navy-primary);
-        border-color: var(--navy-primary);
-        color: #ffffff;
-        box-shadow: none;
-      }
+      /* Mobile mode pills handled in dedicated mobile/touch block below */
       .timeline-scroll {
         -webkit-overflow-scrolling: touch;
       }
@@ -1040,6 +1018,47 @@
       }
       .grade-label span.role-tag {
         font-size: 0.64rem;
+      }
+    }
+
+    /* Mobile & Touch Devices: Render each view mode as an individual oval pill */
+    @media (max-width: 960px), (hover: none) and (pointer: coarse) {
+      .app-header .header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .app-header .mode-switcher {
+        background: transparent;
+        background-color: transparent;
+        border: none;
+        padding: 0;
+        border-radius: 0;
+        box-shadow: none;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+      }
+      .app-header .mode-btn {
+        background-color: var(--pill-bg);
+        color: var(--navy-primary);
+        border: 1px solid var(--border-hairline);
+        border-radius: 999px;
+        padding: 7px 15px;
+        font-size: 0.86rem;
+        font-weight: 600;
+        box-shadow: none;
+      }
+      .app-header .mode-btn:hover:not(.active) {
+        background-color: var(--pill-hover);
+      }
+      .app-header .mode-btn.active {
+        background-color: var(--navy-primary);
+        border-color: var(--navy-primary);
+        color: #ffffff;
+        box-shadow: none;
       }
     }
   </style>
@@ -2020,7 +2039,7 @@
           </div>
 
           <div class="timeline-subheader">
-            <span class="timeline-caption"> </span>
+            <span class="timeline-caption">SCHEDULE COMPARISON</span>
             <div class="legend-list">
               <span class="legend-item"><span class="legend-swatch" style="background: var(--navy-primary);"></span>Target Block</span>
               <span class="legend-item"><span class="legend-swatch" style="background: var(--green-no-students);"></span>HR without Students</span>
@@ -2435,7 +2454,7 @@
           return `
             <article class="card">
               <div class="result-card-header">
-                <h2 class="result-title">${day} — Master Schedule (Grades 1–5)</h2>
+                <h2 class="result-title">${day} — Master Schedule Grid (Grades 1–5)</h2>
                 <div class="result-actions">
                   <button
                     type="button"
@@ -2449,7 +2468,7 @@
               </div>
 
               <div class="timeline-subheader">
-                <span class="timeline-caption"> </span>
+                <span class="timeline-caption">FULL SCHOOL DAY TIMELINE </span>
                 <div class="legend-list">
                   <span class="legend-item"><span class="legend-swatch" style="background: var(--green-no-students);"></span>HR without Students</span>
                   <span class="legend-item"><span class="legend-swatch" style="background: var(--slate-with-students);"></span>HR with Students</span>
