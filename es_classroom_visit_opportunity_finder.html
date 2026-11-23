@@ -1652,6 +1652,7 @@
       dtDay: INITIAL_DEFAULTS.defaultDay,
       dtStartText: INITIAL_DEFAULTS.dtStartText,
       dtEndText: INITIAL_DEFAULTS.dtEndText,
+      dtUserEditedTime: false,
 
       // Mode 3: Master Grid
       gridDay: INITIAL_DEFAULTS.defaultDay, // 'All' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday'
@@ -1918,7 +1919,7 @@
 
             <!-- 4. COMPARE AGAINST -->
             <div class="filter-section">
-              <div class="section-label">4. LOOK FOR OVERLAP WITH OTHER GRADES </div>
+              <div class="section-label">4. COMPARE AGAINST</div>
               <div class="pill-row">
                 ${COMPARE_BLOCKS_META.map((item) => {
                   const isActive = state.compareAgainst.has(item.name);
@@ -2582,12 +2583,33 @@
     /* ========================================================================
        7. RENDER ORCHESTRATION & EVENT HANDLING
        ======================================================================== */
+    function scrollDayTimeTimelineToCurrentTime() {
+      if (state.mode !== 'daytime') return;
+      const scrollEl = document.querySelector('#appRoot .timeline-scroll');
+      if (!scrollEl || scrollEl.scrollWidth <= scrollEl.clientWidth) return;
+
+      const startMin = parseFlexibleTime(state.dtStartText);
+      if (startMin === null) return;
+
+      const clampedMin = Math.min(DAY_END_MIN, Math.max(DAY_START_MIN, startMin));
+      const trackLane = scrollEl.querySelector('.track-lane');
+      const trackWidth = trackLane ? trackLane.offsetWidth : scrollEl.scrollWidth;
+      const ratio = (clampedMin - DAY_START_MIN) / DAY_SPAN_MIN;
+      const offsetInTrack = ratio * trackWidth;
+
+      const leadPadding = 24;
+      const maxScroll = scrollEl.scrollWidth - scrollEl.clientWidth;
+      scrollEl.scrollLeft = Math.min(maxScroll, Math.max(0, offsetInTrack - leadPadding));
+    }
+
     function renderApp() {
       const root = document.getElementById('appRoot');
       if (state.mode === 'block') {
         root.innerHTML = renderBlockMode();
       } else if (state.mode === 'daytime') {
         root.innerHTML = renderDayTimeMode();
+        scrollDayTimeTimelineToCurrentTime();
+        requestAnimationFrame(scrollDayTimeTimelineToCurrentTime);
       } else {
         root.innerHTML = renderMasterGridMode();
       }
@@ -2599,6 +2621,11 @@
         const nextMode = btn.getAttribute('data-mode');
         if (!nextMode || nextMode === state.mode) return;
         state.mode = nextMode;
+        if (state.mode === 'daytime' && !state.dtUserEditedTime) {
+          const latestDefaults = getInitialClockDefaults();
+          state.dtStartText = latestDefaults.dtStartText;
+          state.dtEndText = latestDefaults.dtEndText;
+        }
         document.querySelectorAll('.mode-btn').forEach((b) => {
           b.classList.toggle('active', b.getAttribute('data-mode') === state.mode);
         });
@@ -2734,6 +2761,7 @@
       const action = target.getAttribute('data-action');
       if (action === 'dt-start-input' || action === 'dt-end-input') {
         const cursorPos = target.selectionStart;
+        state.dtUserEditedTime = true;
         if (action === 'dt-start-input') {
           state.dtStartText = target.value;
           const parsedStart = parseFlexibleTime(target.value);
