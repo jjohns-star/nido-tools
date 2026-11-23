@@ -49,137 +49,7 @@
       z-index: 20;
     }
 
-    /* Top row: Reset / zoom utility box + compact number inputs */
-    .top-controls-row {
-      display: flex;
-      align-items: stretch;
-      justify-content: flex-end;
-      gap: 7px;
-    }
-
-    /* Compact number inputs */
-    .inputs-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 7px 10px;
-      display: flex;
-      align-items: flex-end;
-      gap: 8px;
-      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.07);
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .field label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--text);
-      white-space: nowrap;
-    }
-
-    .field input[type="text"] {
-      width: 76px;
-      padding: 5px 7px;
-      font-size: 0.84rem;
-      border: 1.5px solid var(--border);
-      border-radius: 6px;
-      color: var(--text);
-      background: #fff;
-      transition: border-color 0.15s ease, background-color 0.15s ease;
-    }
-
-    .field.parts-field input[type="text"] {
-      width: 58px;
-    }
-
-    .field input[type="text"]:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
-
-    .field input[type="text"].invalid {
-      border-color: #dc2626;
-      background: #fef2f2;
-    }
-
-    .field.point-field input[type="text"]:focus {
-      border-color: var(--point-red);
-    }
-
-    .input-with-clear {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-    }
-
-    .input-with-clear input[type="text"] {
-      padding-right: 22px;
-    }
-
-    .clear-input-btn {
-      position: absolute;
-      right: 4px;
-      padding: 2px 5px;
-      font-size: 0.88rem;
-      line-height: 1.1;
-      color: var(--muted);
-      background: transparent;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .clear-input-btn:hover {
-      color: var(--text);
-      background: #e2e8f0;
-    }
-
-    /* Reset & Zoom Out box on the top row */
-    .reset-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 7px 8px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.07);
-    }
-
-    .action-btn {
-      min-height: 36px;
-      padding: 6px 12px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--text);
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-    }
-
-    .action-btn:hover {
-      background: #e2e8f0;
-    }
-
-    .action-btn.zoom-out-btn {
-      color: #1d4ed8;
-      border-color: #bfdbfe;
-      background: #eff6ff;
-    }
-
-    .action-btn.zoom-out-btn:hover {
-      background: #dbeafe;
-    }
-
-    /* Bottom row: Line Click Mode box sitting flat against the bottom */
+    /* Top row: Line Click Mode box */
     .mode-box {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -242,6 +112,148 @@
 
     .mode-btn[data-mode="remove-point"].active {
       color: var(--remove-red);
+    }
+
+    /* Bottom row: longer row (Reset / zoom utility box + compact number inputs) sitting flat against the bottom */
+    .bottom-controls-row {
+      display: flex;
+      align-items: stretch;
+      justify-content: flex-end;
+      gap: 7px;
+    }
+
+    /* Compact number inputs */
+    .inputs-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 10px;
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.07);
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .field label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .field input[type="text"] {
+      width: 88px;
+      padding: 5px 7px;
+      font-size: 0.84rem;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .field.parts-field input[type="text"] {
+      width: 58px;
+    }
+
+    .field input[type="text"]:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .field input[type="text"].invalid {
+      border-color: #dc2626;
+      background: #fef2f2;
+    }
+
+    .field.point-field input[type="text"]:focus {
+      border-color: var(--point-red);
+    }
+
+    .input-with-clear {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .input-with-clear input[type="text"] {
+      padding-right: 22px;
+    }
+
+    .clear-input-btn {
+      position: absolute;
+      right: 4px;
+      padding: 2px 5px;
+      font-size: 0.88rem;
+      line-height: 1.1;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .clear-input-btn:hover {
+      color: var(--text);
+      background: #e2e8f0;
+    }
+
+    /* Reset, Start Fresh, Zoom In & Zoom Out box */
+    .reset-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.07);
+    }
+
+    .action-btn {
+      min-height: 36px;
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text);
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .action-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .action-btn.start-fresh-btn {
+      color: #b91c1c;
+      border-color: #fecaca;
+      background: #fef2f2;
+    }
+
+    .action-btn.start-fresh-btn:hover {
+      background: #fee2e2;
+    }
+
+    .action-btn.zoom-in-btn,
+    .action-btn.zoom-out-btn {
+      color: #1d4ed8;
+      border-color: #bfdbfe;
+      background: #eff6ff;
+    }
+
+    .action-btn.zoom-in-btn:hover,
+    .action-btn.zoom-out-btn:hover {
+      background: #dbeafe;
     }
 
     /* Full-viewport single number line stage */
@@ -336,13 +348,13 @@
       opacity: 1;
     }
 
-    @media (max-width: 720px) {
+    @media (max-width: 820px) {
       .bottom-right-controls {
         bottom: 6px;
         right: 6px;
         max-width: calc(100vw - 12px);
       }
-      .top-controls-row {
+      .bottom-controls-row {
         flex-wrap: wrap;
         justify-content: flex-end;
       }
@@ -351,7 +363,7 @@
         justify-content: flex-end;
       }
       .field input[type="text"] {
-        width: 66px;
+        width: 74px;
       }
       .field.parts-field input[type="text"] {
         width: 52px;
@@ -365,39 +377,6 @@
 </head>
 <body>
   <aside class="bottom-right-controls" aria-label="Number line controls">
-    <div class="top-controls-row">
-      <div class="reset-box">
-        <button id="resetBtn" class="action-btn" type="button">Reset</button>
-        <button id="zoomOutBtn" class="action-btn zoom-out-btn" type="button" hidden>Zoom Out</button>
-        <button id="centerBtn" class="action-btn" type="button" hidden>Center Zoom</button>
-      </div>
-
-      <div class="inputs-box">
-        <div class="field">
-          <label for="startInput">Starting Point</label>
-          <input id="startInput" type="text" inputmode="decimal" value="0" placeholder="0" />
-        </div>
-
-        <div class="field">
-          <label for="endInput">Ending Point</label>
-          <input id="endInput" type="text" inputmode="decimal" value="100" placeholder="100" />
-        </div>
-
-        <div class="field parts-field">
-          <label for="partsInput">Parts</label>
-          <input id="partsInput" type="text" inputmode="numeric" value="10" placeholder="10" />
-        </div>
-
-        <div class="field point-field">
-          <label for="pointInput">Point to Plot</label>
-          <div class="input-with-clear">
-            <input id="pointInput" type="text" inputmode="decimal" value="" placeholder="—" />
-            <button id="clearPointBtn" class="clear-input-btn" type="button" title="Clear point to plot" hidden>&times;</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div class="mode-box">
       <span class="mode-box-title" id="modeGroupLabel">Line Click Mode</span>
       <div class="mode-toggle" role="radiogroup" aria-labelledby="modeGroupLabel">
@@ -430,6 +409,41 @@
         </button>
       </div>
     </div>
+
+    <div class="bottom-controls-row">
+      <div class="reset-box">
+        <button id="resetBtn" class="action-btn" type="button" title="Return to the original range with all points and labels">Reset</button>
+        <button id="startFreshBtn" class="action-btn start-fresh-btn" type="button" title="Clear all points and labels and return to the original range">Start Fresh</button>
+        <button id="zoomInBtn" class="action-btn zoom-in-btn" type="button">Zoom In</button>
+        <button id="zoomOutBtn" class="action-btn zoom-out-btn" type="button">Zoom Out</button>
+        <button id="centerBtn" class="action-btn" type="button" hidden>Center Zoom</button>
+      </div>
+
+      <div class="inputs-box">
+        <div class="field">
+          <label for="startInput">Starting Point</label>
+          <input id="startInput" type="text" inputmode="decimal" value="0" placeholder="0" />
+        </div>
+
+        <div class="field">
+          <label for="endInput">Ending Point</label>
+          <input id="endInput" type="text" inputmode="decimal" value="100" placeholder="100" />
+        </div>
+
+        <div class="field parts-field">
+          <label for="partsInput">Parts</label>
+          <input id="partsInput" type="text" inputmode="numeric" value="10" placeholder="10" />
+        </div>
+
+        <div class="field point-field">
+          <label for="pointInput">Point to Plot</label>
+          <div class="input-with-clear">
+            <input id="pointInput" type="text" inputmode="decimal" value="" placeholder="—" />
+            <button id="clearPointBtn" class="clear-input-btn" type="button" title="Clear point to plot" hidden>&times;</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </aside>
 
   <main id="scrollViewport" class="scroll-viewport">
@@ -444,6 +458,8 @@
     const clearPointBtn = document.getElementById("clearPointBtn");
     const modeButtons = document.querySelectorAll(".mode-btn");
     const resetBtn = document.getElementById("resetBtn");
+    const startFreshBtn = document.getElementById("startFreshBtn");
+    const zoomInBtn = document.getElementById("zoomInBtn");
     const zoomOutBtn = document.getElementById("zoomOutBtn");
     const centerBtn = document.getElementById("centerBtn");
     const scrollViewport = document.getElementById("scrollViewport");
@@ -472,6 +488,12 @@
     let interactionMode = "plot-point";
     let partitionCount = 10;
 
+    // Tracks the original range entered by the user in the input boxes
+    let originalRange = { start: 0, end: 100, parts: 10 };
+
+    // Tracks all user-labeled tick values so they are preserved across zoom changes and restored on Reset
+    let labeledTickValues = new Set();
+
     // Stack of zoom intervals on the single proportional number line:
     // Each level: { start: number, end: number, labeledTicks: Set<number> }
     let levels = [];
@@ -499,20 +521,44 @@
       return Number(num.toPrecision(12));
     }
 
+    // Format numbers using US comma conventions for values >= 1,000 (or <= -1,000)
     function formatEndpoint(num) {
       const cleaned = cleanFloat(num);
+      if (Object.is(cleaned, -0)) return "0";
       if (Math.abs(cleaned) > 0 && Math.abs(cleaned) < 1e-6) {
         return cleaned.toFixed(10).replace(/\.?0+$/, "");
       }
-      return String(cleaned);
+      const str = String(cleaned);
+      if (str.includes("e") || str.includes("E")) {
+        return str;
+      }
+      const parts = str.split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return parts.join(".");
     }
 
     function parseNumericInput(raw) {
       const trimmed = raw.trim();
-      if (trimmed === "" || trimmed === "-" || trimmed === "." || trimmed === "-.") {
+      if (
+        trimmed === "" ||
+        trimmed === "-" ||
+        trimmed === "." ||
+        trimmed === "-." ||
+        /,,/.test(trimmed) ||
+        /^,|,$/.test(trimmed)
+      ) {
         return null;
       }
-      const value = Number(trimmed);
+      const normalized = trimmed.replace(/,/g, "");
+      if (
+        normalized === "" ||
+        normalized === "-" ||
+        normalized === "." ||
+        normalized === "-."
+      ) {
+        return null;
+      }
+      const value = Number(normalized);
       return Number.isFinite(value) ? value : null;
     }
 
@@ -545,6 +591,25 @@
       draftPoint = null;
       pointInput.value = "";
       updateClearButtonVisibility();
+    }
+
+    // Build the Set of interior tick indices for [start, end] matching labeledTickValues
+    function getAlignedTickIndices(start, end, parts) {
+      const indices = new Set();
+      const span = end - start;
+      if (span <= 0 || parts < 2) return indices;
+
+      labeledTickValues.forEach((val) => {
+        const idx = Math.round(((val - start) / span) * parts);
+        if (idx > 0 && idx < parts) {
+          const alignedVal = cleanFloat(start + (idx / parts) * span);
+          if (Math.abs(alignedVal - val) <= span * 1e-9) {
+            indices.add(idx);
+          }
+        }
+      });
+
+      return indices;
     }
 
     // Geometry of the full-viewport SVG and the centered active interval span
@@ -596,9 +661,19 @@
     }
 
     function updateUtilityButtons() {
-      const hasZoom = levels.length > 1;
-      zoomOutBtn.hidden = !hasZoom;
-      centerBtn.hidden = !(hasZoom || isCameraOffCenter());
+      if (levels.length === 0) {
+        zoomInBtn.hidden = true;
+        zoomOutBtn.hidden = true;
+        centerBtn.hidden = true;
+        return;
+      }
+      const root = levels[0];
+      const active = levels[levels.length - 1];
+      const canZoomIn = (active.end - active.start) > 1e-8;
+      const canZoomOut = levels.length > 1 || (root.end - root.start) < 1e12;
+      zoomInBtn.hidden = !canZoomIn;
+      zoomOutBtn.hidden = !canZoomOut;
+      centerBtn.hidden = !isCameraOffCenter();
     }
 
     function handleTickClick(levelIndex, tickIndex) {
@@ -610,10 +685,19 @@
         return;
       }
 
+      const span = level.end - level.start;
+      const tickVal = cleanFloat(level.start + (tickIndex / partitionCount) * span);
+
       if (level.labeledTicks.has(tickIndex)) {
         level.labeledTicks.delete(tickIndex);
+        labeledTickValues.forEach((v) => {
+          if (Math.abs(v - tickVal) <= Math.max(1e-9, Math.abs(span) * 1e-9)) {
+            labeledTickValues.delete(v);
+          }
+        });
       } else {
         level.labeledTicks.add(tickIndex);
+        labeledTickValues.add(tickVal);
       }
 
       if (activeAnimationId === null) {
@@ -696,7 +780,7 @@
       let sum = 0;
       for (let i = 0; i < text.length; i++) {
         const ch = text[i];
-        if (ch === "." || ch === "-") {
+        if (ch === "." || ch === "-" || ch === ",") {
           sum += 0.40;
         } else {
           sum += 0.68;
@@ -1378,13 +1462,84 @@
       }
 
       partitionCount = parsedParts;
+      originalRange = { start, end, parts: parsedParts };
 
       if (clearAllPoints) {
         plottedPoints = [];
         draftPoint = null;
         pointInput.value = "";
         colorCursor = 0;
+        labeledTickValues.clear();
       }
+
+      levels = [
+        {
+          start,
+          end,
+          labeledTicks: clearAllPoints ? new Set() : getAlignedTickIndices(start, end, parsedParts)
+        }
+      ];
+      camera = { start, end };
+      updateClearButtonVisibility();
+      renderFrame(camera, 1);
+      updateUtilityButtons();
+    }
+
+    // Reset: return to the original range entered while preserving all points and labels
+    function handleReset() {
+      if (draftPoint) {
+        commitDraftPoint();
+      }
+
+      const { start, end, parts } = originalRange;
+      partitionCount = parts;
+
+      startInput.value = formatEndpoint(start);
+      endInput.value = formatEndpoint(end);
+      partsInput.value = String(parts);
+      startInput.classList.remove("invalid");
+      endInput.classList.remove("invalid");
+      partsInput.classList.remove("invalid");
+      endInput.removeAttribute("title");
+      partsInput.removeAttribute("title");
+
+      levels = [
+        {
+          start,
+          end,
+          labeledTicks: getAlignedTickIndices(start, end, parts)
+        }
+      ];
+
+      updateClearButtonVisibility();
+      updateUtilityButtons();
+      animateCameraTo({ start, end }, 540, false);
+    }
+
+    // Start Fresh: return to an empty number line with the original range entered
+    function handleStartFresh() {
+      if (activeAnimationId !== null) {
+        cancelAnimationFrame(activeAnimationId);
+        activeAnimationId = null;
+      }
+
+      const { start, end, parts } = originalRange;
+      partitionCount = parts;
+
+      startInput.value = formatEndpoint(start);
+      endInput.value = formatEndpoint(end);
+      partsInput.value = String(parts);
+      startInput.classList.remove("invalid");
+      endInput.classList.remove("invalid");
+      partsInput.classList.remove("invalid");
+      endInput.removeAttribute("title");
+      partsInput.removeAttribute("title");
+
+      plottedPoints = [];
+      draftPoint = null;
+      pointInput.value = "";
+      colorCursor = 0;
+      labeledTickValues.clear();
 
       levels = [
         {
@@ -1394,6 +1549,7 @@
         }
       ];
       camera = { start, end };
+
       updateClearButtonVisibility();
       renderFrame(camera, 1);
       updateUtilityButtons();
@@ -1440,25 +1596,149 @@
       levels.push({
         start: newStart,
         end: newEnd,
-        labeledTicks: new Set()
+        labeledTicks: getAlignedTickIndices(newStart, newEnd, partitionCount)
       });
 
       updateUtilityButtons();
       animateCameraTo({ start: newStart, end: newEnd }, 620, true);
     }
 
-    // Zoom back out one level on the single line while preserving all plotted points
-    function handleZoomOut() {
-      if (levels.length <= 1) return;
+    // Compute the next narrower power-of-ten interval (e.g. [0, 10,000] -> [0, 1,000] -> [0, 100] -> [0, 10])
+    function getPrevTenMultipleRange(start, end) {
+      const span = end - start;
+      if (span <= 0) return { start, end };
+
+      const exp = Math.ceil(Math.log10(span * (1 - 1e-9))) - 1;
+      const step = cleanFloat(Math.pow(10, exp));
+
+      let newStart = cleanFloat(Math.ceil(start / step - 1e-9) * step);
+      let newEnd = cleanFloat(newStart + step);
+
+      if (Object.is(newStart, -0)) newStart = 0;
+      if (Object.is(newEnd, -0)) newEnd = 0;
+
+      return { start: newStart, end: newEnd };
+    }
+
+    // Compute the next enclosing power-of-ten interval (e.g. [0, 100] -> [0, 1,000] -> [0, 10,000])
+    function getNextTenMultipleRange(start, end) {
+      const span = end - start;
+      if (span <= 0) return { start, end };
+
+      const exp = Math.floor(Math.log10(span * (1 + 1e-9))) + 1;
+      const step = cleanFloat(Math.pow(10, exp));
+
+      let newStart = cleanFloat(Math.floor(start / step + 1e-9) * step);
+      let newEnd = cleanFloat(Math.ceil(end / step - 1e-9) * step);
+
+      if (newEnd <= newStart) {
+        newEnd = cleanFloat(newStart + step);
+      }
+
+      if (Object.is(newStart, -0)) newStart = 0;
+      if (Object.is(newEnd, -0)) newEnd = 0;
+
+      return { start: newStart, end: newEnd };
+    }
+
+    // Zoom in directly to the next nearest multiple of 10, 100, 1,000, etc.
+    function handleZoomIn() {
+      if (levels.length === 0) return;
 
       if (draftPoint) {
         commitDraftPoint();
       }
 
-      levels.pop();
-      const parent = levels[levels.length - 1];
+      const active = levels[levels.length - 1];
+      const currentSpan = active.end - active.start;
+      if (currentSpan <= 1e-8) return;
+
+      const nextRange = getPrevTenMultipleRange(active.start, active.end);
+      const newSpan = nextRange.end - nextRange.start;
+      if (newSpan <= 0 || newSpan >= currentSpan) return;
+
+      const newLabeledTicks = getAlignedTickIndices(
+        nextRange.start,
+        nextRange.end,
+        partitionCount
+      );
+
+      if (levels.length > 1) {
+        const tol = currentSpan * 1e-9;
+        if (nextRange.start >= active.start - tol && nextRange.end <= active.end + tol) {
+          levels.push({
+            start: nextRange.start,
+            end: nextRange.end,
+            labeledTicks: newLabeledTicks
+          });
+          updateUtilityButtons();
+          animateCameraTo({ start: nextRange.start, end: nextRange.end }, 620, true);
+          return;
+        }
+      }
+
+      levels = [
+        {
+          start: nextRange.start,
+          end: nextRange.end,
+          labeledTicks: newLabeledTicks
+        }
+      ];
+
+      startInput.value = formatEndpoint(nextRange.start);
+      endInput.value = formatEndpoint(nextRange.end);
+      startInput.classList.remove("invalid");
+      endInput.classList.remove("invalid");
+      endInput.removeAttribute("title");
+
       updateUtilityButtons();
-      animateCameraTo({ start: parent.start, end: parent.end }, 540, false);
+      animateCameraTo({ start: nextRange.start, end: nextRange.end }, 620, true);
+    }
+
+    // Zoom back out one sub-level, or expand outward to the next nearest multiples of ten
+    function handleZoomOut() {
+      if (levels.length === 0) return;
+
+      if (draftPoint) {
+        commitDraftPoint();
+      }
+
+      if (levels.length > 1) {
+        levels.pop();
+        const parent = levels[levels.length - 1];
+        updateUtilityButtons();
+        animateCameraTo({ start: parent.start, end: parent.end }, 540, false);
+        return;
+      }
+
+      // Already at the root interval: expand to the next multiples of ten
+      const root = levels[0];
+      const currentSpan = root.end - root.start;
+      if (currentSpan <= 0 || currentSpan >= 1e12) return;
+
+      const nextRange = getNextTenMultipleRange(root.start, root.end);
+      const newLabeledTicks = getAlignedTickIndices(
+        nextRange.start,
+        nextRange.end,
+        partitionCount
+      );
+
+      levels = [
+        {
+          start: nextRange.start,
+          end: nextRange.end,
+          labeledTicks: newLabeledTicks
+        }
+      ];
+
+      startInput.value = formatEndpoint(nextRange.start);
+      endInput.value = formatEndpoint(nextRange.end);
+      startInput.classList.remove("invalid");
+      endInput.classList.remove("invalid");
+      endInput.removeAttribute("title");
+
+      updateUtilityButtons();
+      animateCameraTo({ start: nextRange.start, end: nextRange.end }, 620, true);
     }
 
     // Click-and-drag horizontal panning along the single proportional line
@@ -1541,6 +1821,7 @@
       pointInput.focus();
     });
 
+    zoomInBtn.addEventListener("click", handleZoomIn);
     zoomOutBtn.addEventListener("click", handleZoomOut);
 
     centerBtn.addEventListener("click", () => {
@@ -1552,6 +1833,21 @@
     startInput.addEventListener("input", () => updateFromInputs(false));
     endInput.addEventListener("input", () => updateFromInputs(false));
     partsInput.addEventListener("input", () => updateFromInputs(false));
+
+    startInput.addEventListener("blur", () => {
+      const val = parseNumericInput(startInput.value);
+      if (val !== null) {
+        startInput.value = formatEndpoint(val);
+      }
+    });
+
+    endInput.addEventListener("blur", () => {
+      const val = parseNumericInput(endInput.value);
+      if (val !== null) {
+        endInput.value = formatEndpoint(val);
+      }
+    });
+
     pointInput.addEventListener("input", handlePointInput);
     pointInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
@@ -1571,7 +1867,8 @@
       }
     });
 
-    resetBtn.addEventListener("click", () => updateFromInputs(true));
+    resetBtn.addEventListener("click", handleReset);
+    startFreshBtn.addEventListener("click", handleStartFresh);
 
     // Initialize on load
     updateFromInputs(true);
